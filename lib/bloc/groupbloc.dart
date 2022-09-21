@@ -23,4 +23,8 @@ class GroupBloc extends Bloc<EduEvent, EduState> {
 
     on<EduClearEvent>((event, emit) => emit(EduEmtyState()));
   }
+  
+  Future<dynamic> save(GroupEdu groupEdu) {
+    return repository.save("groupedu/save", groupEdu);
+  }
 }

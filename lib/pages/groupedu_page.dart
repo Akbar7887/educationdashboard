@@ -25,12 +25,20 @@ class _GroupEduPageState extends State<GroupEduPage> {
   late GroupEdu? _groupEdu;
   List<Subject> _listSubject = [];
   late SubjectBloc subjectBloc;
+  late Subject? _subject;
+  TextEditingController _name = TextEditingController();
+  DateTime? _selectedDate;
+  final _globalKeyname = GlobalKey<FormState>();
+  GroupBloc? _groupBloc;
 
   void getAll() {
     subjectBloc.getall().then((value) {
       setState(() {
-        if(value!=null){
+        if (value != null) {
           _listSubject = value.map((e) => Subject.fromJson(e)).toList();
+          // if(_listSubject.length != 0){
+          //   subject = _listSubject.first;
+          // }
         }
       });
     });
@@ -40,8 +48,11 @@ class _GroupEduPageState extends State<GroupEduPage> {
   void initState() {
     super.initState();
     subjectBloc = BlocProvider.of<SubjectBloc>(context);
+    _groupBloc = BlocProvider.of<GroupBloc>(context);
     getAll();
-
+    _subject = Subject();
+    _groupEdu = GroupEdu();
+    _selectedDate = DateTime.now();
   }
 
   @override
@@ -57,6 +68,7 @@ class _GroupEduPageState extends State<GroupEduPage> {
 
           if (state is GroupEduLoadedSatet) {
             _list = state.loadedGroupEdu;
+
             return Container(
                 alignment: Alignment.center,
                 // padding: EdgeInsets.only(left: 20, right: 20),
@@ -98,6 +110,7 @@ class _GroupEduPageState extends State<GroupEduPage> {
           child: ElevatedButton(
             onPressed: () {
               _groupEdu = null;
+              _subject = null;
               showDialogWidget();
             },
             child: Text("Добавить"),
@@ -143,102 +156,120 @@ class _GroupEduPageState extends State<GroupEduPage> {
   }
 
   Future<void> showDialogWidget() async {
-    TextEditingController _name = TextEditingController();
-    // TextEditingController _creatdate = TextEditingController();
-    DateTime? selectedDate;
-    Subject? _subject;
-
     //TextEditingController _se = TextEditingController();
 
     if (_groupEdu != null) {
       _name.text = _groupEdu!.name!;
-      selectedDate = DateTime.parse(_groupEdu!.createdate!);
-      if (_listSubject.length != 0) {
-        _subject = _listSubject
-            .firstWhere((element) => element.id == _groupEdu!.subject!.id);
-      }
+      _selectedDate = DateTime.parse(_groupEdu!.createdate!);
+    } else {
+      _name.text = "";
+      _selectedDate = DateTime.now();
+      _groupEdu = GroupEdu();
+    }
+    if (_listSubject.length != 0 && _groupEdu != null) {
+      _subject = _listSubject
+          .firstWhere((element) => element.id == _groupEdu!.subject!.id);
+    } else {
+      _subject = _listSubject.first;
     }
     return await showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text('Группа'),
-          content: SizedBox(
-            width: 600,
-            height: 400,
-            child: Column(
-              children: [
-                Container(
-                  child: DateTimeField(
-                    decoration: const InputDecoration(
-                      hintStyle: TextStyle(color: Colors.black45),
-                      errorStyle: TextStyle(color: Colors.redAccent),
-                      border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.event_note),
-                      labelText: 'Дата создание',
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Группа'),
+            content: SizedBox(
+              width: 600,
+              height: 400,
+              child: Column(
+                children: [
+                  Container(
+                    child: DateTimeField(
+                      decoration: const InputDecoration(
+                        hintStyle: TextStyle(color: Colors.black45),
+                        errorStyle: TextStyle(color: Colors.redAccent),
+                        border: OutlineInputBorder(),
+                        suffixIcon: Icon(Icons.event_note),
+                        labelText: 'Дата создание',
+                      ),
+                      mode: DateTimeFieldPickerMode.date,
+                      selectedDate: _selectedDate,
+                      onDateSelected: (DateTime value) {
+                        _selectedDate = value;
+                      },
                     ),
-                    initialDate: DateTime.tryParse(_groupEdu!.createdate!),
-                    mode: DateTimeFieldPickerMode.date,
-                    selectedDate: selectedDate,
-                    // autovalidateMode: AutovalidateMode.always,
-                    // validator: (e) =>
-                    //     (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
-                    onDateSelected: (DateTime value) {
-                      selectedDate = value;
-                    },
                   ),
-                ),
-                Container(
-                  child: TextFormField(
-                    decoration: InputDecoration(labelText: "Название группы"),
-                    controller: _name,
+                  Container(
+                    child: Form(
+                      key: _globalKeyname,
+                      child: TextFormField(
+                        decoration:
+                            InputDecoration(labelText: "Название группы"),
+                        controller: _name,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Просим заполнить название группы!";
+                          }
+                        },
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  child: _listSubject.length == 0
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : DropdownButton(
-                          items:
-                              _listSubject.map<DropdownMenuItem<Subject>>((e) {
-                            return DropdownMenuItem(
-                              child: Text(e.name!),
-                              value: e,
-                            );
-                          }).toList(),
-                          isExpanded: true,
-                          hint: Text("Предмет"),
-                          value: _subject,
-                          onChanged: (Subject? newValue) {
-                            setState(() {
-                              _subject = newValue;
-                            });
-                          },
-                        ),
-                )
-              ],
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: _listSubject.length == 0
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : DropdownButton(
+                            items: _listSubject
+                                .map<DropdownMenuItem<Subject>>((e) {
+                              return DropdownMenuItem(
+                                child: Text(e.name!),
+                                value: e,
+                              );
+                            }).toList(),
+                            isExpanded: true,
+                            hint: Text("Предмет"),
+                            value: _subject,
+                            onChanged: (Subject? newValue) {
+                              setState(() {
+                                _subject = newValue;
+                              });
+                            },
+                          ),
+                  )
+                ],
+              ),
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Сохранить'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
-              },
-            ),
-            TextButton(
-              child: Text('Отмена'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
-              },
-            ),
-          ],
-        );
+            actions: <Widget>[
+              TextButton(
+                child: Text('Сохранить'),
+                onPressed: () {
+                  if (_globalKeyname.currentState!.validate() == false) {
+                    return;
+                  }
+
+                  _groupEdu!.name = _name.text;
+                  _groupEdu!.subject = _subject;
+                  _groupEdu!.createdate = formatter.format(_selectedDate!);
+
+                  _groupBloc!.save(_groupEdu!).then((value) {
+                    Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                  });
+                },
+              ),
+              TextButton(
+                child: Text('Отмена'),
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                },
+              ),
+            ],
+          );
+        });
       },
     );
   }

@@ -51,4 +51,19 @@ class Api {
       return false;
     }
   }
+
+  Future<dynamic> save(String url, Object object) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Uri uri = Uri.parse("${Ui.url}${url}");
+    final response =
+        await http.post(uri, headers: header, body: jsonEncode(object));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(
+          response.bodyBytes)); //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception("Error");
+    }
+  }
 }
