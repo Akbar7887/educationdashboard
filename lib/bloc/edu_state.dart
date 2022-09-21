@@ -1,4 +1,5 @@
-import '../models/GroupEdu.dart';
+import 'package:educationdashboard/models/GroupSet.dart';
+
 
 abstract class EduState {}
 
@@ -10,6 +11,6 @@ class EduErrorState extends EduState {}
 
 class GroupEduLoadedSatet extends EduState{
 
-  List<GroupEdu> loadedGroupEdu;
+  List<GroupSet> loadedGroupEdu;
   GroupEduLoadedSatet({required this.loadedGroupEdu});
 }

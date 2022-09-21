@@ -1,9 +1,9 @@
 import 'package:educationdashboard/bloc/edu_event.dart';
 import 'package:educationdashboard/bloc/edu_state.dart';
-import 'package:educationdashboard/models/GroupEdu.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../api/repository.dart';
+import '../models/GroupSet.dart';
 
 class GroupBloc extends Bloc<EduEvent, EduState> {
   final Repository repository;
@@ -14,7 +14,7 @@ class GroupBloc extends Bloc<EduEvent, EduState> {
       try {
         final json = await repository.getall("groupedu/get");
 
-        final loadedGroupEdu = json.map((e) => GroupEdu.fromJson(e)).toList();
+        final loadedGroupEdu = json.map((e) => GroupSet.fromJson(e)).toList();
         emit(GroupEduLoadedSatet(loadedGroupEdu: loadedGroupEdu));
       } catch (_) {
         throw Exception(EduErrorState());
@@ -24,7 +24,7 @@ class GroupBloc extends Bloc<EduEvent, EduState> {
     on<EduClearEvent>((event, emit) => emit(EduEmtyState()));
   }
   
-  Future<dynamic> save(GroupEdu groupEdu) {
+  Future<dynamic> save(GroupSet groupEdu) {
     return repository.save("groupedu/save", groupEdu);
   }
 }

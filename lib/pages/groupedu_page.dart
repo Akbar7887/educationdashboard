@@ -1,7 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:educationdashboard/bloc/edu_state.dart';
 import 'package:educationdashboard/bloc/subject_bloc.dart';
-import 'package:educationdashboard/models/GroupEdu.dart';
+import 'package:educationdashboard/models/GroupSet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,8 +21,8 @@ class GroupEduPage extends StatefulWidget {
 }
 
 class _GroupEduPageState extends State<GroupEduPage> {
-  List<GroupEdu> _list = [];
-  late GroupEdu? _groupEdu;
+  List<GroupSet> _list = [];
+  late GroupSet? _groupEdu;
   List<Subject> _listSubject = [];
   late SubjectBloc subjectBloc;
   late Subject? _subject;
@@ -51,7 +51,7 @@ class _GroupEduPageState extends State<GroupEduPage> {
     _groupBloc = BlocProvider.of<GroupBloc>(context);
     getAll();
     _subject = Subject();
-    _groupEdu = GroupEdu();
+    _groupEdu = GroupSet();
     _selectedDate = DateTime.now();
   }
 
@@ -164,7 +164,7 @@ class _GroupEduPageState extends State<GroupEduPage> {
     } else {
       _name.text = "";
       _selectedDate = DateTime.now();
-      _groupEdu = GroupEdu();
+      _groupEdu = GroupSet();
     }
     if (_listSubject.length != 0 && _groupEdu != null) {
       _subject = _listSubject

@@ -1,14 +1,8 @@
-import 'package:educationdashboard/bloc/edu_event.dart';
-import 'package:educationdashboard/models/GroupEdu.dart';
 import 'package:educationdashboard/pages/home.dart';
 import 'package:educationdashboard/pages/login_page.dart';
 import 'package:educationdashboard/providers/simple_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-
-import 'api/repository.dart';
-import 'bloc/groupbloc.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
