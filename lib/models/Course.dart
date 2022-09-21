@@ -1,7 +1,9 @@
+import 'GroupSet.dart';
+
 class Course {
-    List<GroupSet> groupSet;
-    int id;
-    String level;
+    List<GroupSet>? groupSet;
+    int? id;
+    String? level;
 
     Course({this.groupSet, this.id, this.level});
 
@@ -18,7 +20,7 @@ class Course {
         data['id'] = this.id;
         data['level'] = this.level;
         if (this.groupSet != null) {
-            data['groupSet'] = this.groupSet.map((v) => v.toJson()).toList();
+            data['groupSet'] = this.groupSet!.map((v) => v.toJson()).toList();
         }
         return data;
     }
