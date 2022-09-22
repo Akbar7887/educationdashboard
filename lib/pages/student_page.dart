@@ -1,12 +1,13 @@
 import 'package:educationdashboard/bloc/course_bloc.dart';
+import 'package:educationdashboard/bloc/region_bloc.dart';
 import 'package:educationdashboard/models/Course.dart';
 import 'package:educationdashboard/models/GroupSet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-
 import '../bloc/student_bloc.dart';
+import '../models/Region.dart';
 import '../models/Student.dart';
 import '../models/ui.dart';
 
@@ -21,16 +22,19 @@ class _StudentPageState extends State<StudentPage> {
   List<Student> _listStudent = [];
   List<Course> _listCourse = [];
   List<GroupSet> _listGroup = [];
+  List<Region> _listRegion = [];
+  Region? _region;
   Course? _course;
   GroupSet? _groupSet;
   StudentBloc? studentBloc;
   CourseBloc? courseBloc;
   var formatter = DateFormat('dd-MM-yyyy');
   final _globalKey = GlobalKey<FormState>();
+  RegionBloc? regionBloc;
   TextEditingController _name = TextEditingController();
   TextEditingController _adress = TextEditingController();
 
-  void getAll() {
+  void getStudent() {
     // courseBloc!.get().then((value) {
     //   _listCourse = value.map((e) => Course.fromJson(e)).toList();
     // });
@@ -44,12 +48,21 @@ class _StudentPageState extends State<StudentPage> {
     });
   }
 
+  void getRegion() {
+    regionBloc!.get().then((value) {
+      _listRegion = value.map((e) => Region.fromJson(e)).toList();
+      _listRegion.sort((a,b) => a.id!.compareTo(b.id!));
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     studentBloc = BlocProvider.of<StudentBloc>(context);
     courseBloc = BlocProvider.of<CourseBloc>(context);
-    getAll();
+    regionBloc = BlocProvider.of(context);
+    getStudent();
+    getRegion();
   }
 
   @override
@@ -172,7 +185,7 @@ class _StudentPageState extends State<StudentPage> {
                                 onChanged: (GroupSet? newValue) {
                                   setState(() {
                                     _groupSet = newValue;
-                                    getAll();
+                                    getStudent();
                                   });
                                 },
                               ),
@@ -321,7 +334,7 @@ class _StudentPageState extends State<StudentPage> {
                             onChanged: (GroupSet? newValue) {
                               setState(() {
                                 _groupSet = newValue;
-                                getAll();
+                                getStudent();
                               });
                             },
                           ),
@@ -339,7 +352,37 @@ class _StudentPageState extends State<StudentPage> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        child: InputDecorator(
+                      decoration:
+                          const InputDecoration(border: OutlineInputBorder()),
+                      child: DropdownButtonFormField<Region>(
+                        decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                        ),
+                        items: _listRegion.map<DropdownMenuItem<Region>>((e) {
+                          return DropdownMenuItem(
+                              child: Text(e.name!), value: e);
+                        }).toList(),
+                        value: _region,
+                        isExpanded: true,
+                        hint: Text("Регион"),
+                        onChanged: (Region? newValue) {
+                          setState(() {
+                            _region = newValue;
 
+                          });
+                        },
+                      ),
+                    )),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Container(
                       child: TextFormField(
                         decoration: InputDecoration(labelText: "Адрес"),
@@ -351,7 +394,6 @@ class _StudentPageState extends State<StudentPage> {
                         },
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -360,7 +402,6 @@ class _StudentPageState extends State<StudentPage> {
               TextButton(
                 child: Text('Сохранить'),
                 onPressed: () {
-
                   if (_globalKey.currentState!.validate() == false) {
                     return;
                   }

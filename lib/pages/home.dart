@@ -1,5 +1,6 @@
 
 import 'package:educationdashboard/bloc/course_bloc.dart';
+import 'package:educationdashboard/bloc/region_bloc.dart';
 import 'package:educationdashboard/bloc/subject_bloc.dart';
 import 'package:educationdashboard/pages/groupedu_page.dart';
 import 'package:educationdashboard/pages/student_page.dart';
@@ -37,6 +38,9 @@ class Home extends StatelessWidget {
               BlocProvider(
                   create: (context) =>
                       StudentBloc(repository: context.read<Repository>())),
+              BlocProvider(
+                  create: (context) =>
+                      RegionBloc(repository: context.read<Repository>())),
             ],
             child: Scaffold(
                 appBar: AppBar(
