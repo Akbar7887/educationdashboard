@@ -14,7 +14,7 @@ class StudentBloc extends Cubit<EduState>{
     return await repository.getall("student/get");
   }
 
-  Future<Student> save(Student student) async{
-    return await repository.save("student/save", student);
+  Future<dynamic> save(Student student){
+    return repository.save("student/save", student);
   }
 }

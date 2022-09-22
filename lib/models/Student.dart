@@ -33,8 +33,9 @@ class Student {
       birthday: json['birthday'],
       course: json['course'] != null ? Course.fromJson(json['course']) : null,
       createdate: json['createdate'],
-      exitdate: json['exitdate'] !=null?json['exitdate'] : null,
-      groupSet: json['groupEdu'] != null ? GroupSet.fromJson(json['groupEdu']) : null,
+      exitdate: json['exitdate'],
+      groupSet:
+          json['groupEdu'] != null ? GroupSet.fromJson(json['groupEdu']) : null,
       id: json['id'],
       name: json['name'],
       passportId: json['passportId'],
@@ -53,10 +54,8 @@ class Student {
     if (this.course != null) {
       data['course'] = this.course!.toJson();
     }
-    if (this.exitdate != null) {
-      data['exitdate'] = this.exitdate;
-    }
-      data['groupEdu'] = this.groupSet;
+    data['exitdate'] = this.exitdate;
+    data['groupEdu'] = this.groupSet;
     if (this.region != null) {
       data['region'] = this.region!.toJson();
     }

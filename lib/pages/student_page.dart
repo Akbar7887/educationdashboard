@@ -90,10 +90,6 @@ class _StudentPageState extends State<StudentPage> {
               _listGroup = _listCourse.first.groupSet!;
             }
 
-            // if(_groupSet != null){
-            //
-            // }
-
             return Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
@@ -109,99 +105,99 @@ class _StudentPageState extends State<StudentPage> {
                       height: 10,
                     ),
                     Divider(
-                        // color: Colors.black,
-                        ),
+                      // color: Colors.black,
+                    ),
                     Container(
+                        height: 70,
                         child: Row(
-                      children: [
-                        Container(
-                          width: 200,
-                          height: 50,
-                          // alignment: Alignment.topLeft,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _course = null;
-                              _groupSet = null;
-                              // _subject = null;
-                              showDialogWidget();
-                            },
-                            child: Text("Добавить"),
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.indigoAccent)),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 100,
-                        ),
-                        Container(
-                            width: 400,
-                            height: 70,
-                            child: InputDecorator(
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder()),
-                              child: DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                ),
-                                items: _listCourse
-                                    .map<DropdownMenuItem<Course>>((e) {
-                                  return DropdownMenuItem(
-                                      child: Text(e.level!), value: e);
-                                }).toList(),
-                                value: _course,
-                                isExpanded: true,
-                                hint: Text("Классы"),
-                                onChanged: (Course? newValue) {
-                                  setState(() {
-                                    _course = newValue;
-                                    _listGroup = newValue!.groupSet!;
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                height: 50,
+                                width: 120,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    _course = null;
                                     _groupSet = null;
-                                    // _list.clear();
-                                    // _list = newValue!.groupSet!;
-                                  });
-                                },
-                              ),
-                            )),
-                        SizedBox(
-                          width: 100,
-                        ),
-                        Container(
-                            width: 400,
-                            height: 70,
-                            child: InputDecorator(
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder()),
-                              child: DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
+                                    // _subject = null;
+                                    showDialogWidget();
+                                  },
+                                  child: Text("Добавить"),
+                                  style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty
+                                          .all(
+                                          Colors.indigoAccent)),
                                 ),
-                                items: _listGroup
-                                    .map<DropdownMenuItem<GroupSet>>((e) {
-                                  return DropdownMenuItem(
-                                      child: Text(e.name!), value: e);
-                                }).toList(),
-                                value: _groupSet,
-                                isExpanded: true,
-                                hint: Text("Группы"),
-                                onChanged: (GroupSet? newValue) {
-                                  setState(() {
-                                    _groupSet = newValue;
-                                    getStudent();
-                                  });
-                                },
-                              ),
-                            )),
+                              ),),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
 
-                        // Container(child: ,),
-                      ],
-                    )),
+                                child: InputDecorator(
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder()),
+                                  child: DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                      ),
+                                    ),
+                                    items: _listCourse
+                                        .map<DropdownMenuItem<Course>>((e) {
+                                      return DropdownMenuItem(
+                                          child: Text(e.level!), value: e);
+                                    }).toList(),
+                                    value: _course,
+                                    isExpanded: true,
+                                    hint: Text("Классы"),
+                                    onChanged: (Course? newValue) {
+                                      setState(() {
+                                        _course = newValue;
+                                        _listGroup = newValue!.groupSet!;
+                                        _groupSet = null;
+                                        // _list.clear();
+                                        // _list = newValue!.groupSet!;
+                                      });
+                                    },
+                                  ),
+                                )),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+
+                                child: InputDecorator(
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder()),
+                                  child: DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                      ),
+                                    ),
+                                    items: _listGroup
+                                        .map<DropdownMenuItem<GroupSet>>((e) {
+                                      return DropdownMenuItem(
+                                          child: Text(e.name!), value: e);
+                                    }).toList(),
+                                    value: _groupSet,
+                                    isExpanded: true,
+                                    hint: Text("Группы"),
+                                    onChanged: (GroupSet? newValue) {
+                                      setState(() {
+                                        _groupSet = newValue;
+                                        getStudent();
+                                      });
+                                    },
+                                  ),
+                                )),
+
+                            // Container(child: ,),
+                          ],
+                        )),
                     SizedBox(
                       height: 20,
                     ),
@@ -215,8 +211,11 @@ class _StudentPageState extends State<StudentPage> {
   Widget dateTable() {
     return DataTable(
       headingRowColor: MaterialStateProperty.all(Colors.grey),
-      //columnSpacing: 80,
-
+      border: TableBorder.all(
+        width: 0.1,
+        // color:AppColors.secondaryColor,
+      ),
+      showBottomBorder: true,
       headingTextStyle: TextStyle(color: Colors.white),
       sortColumnIndex: 1,
       columns: [
@@ -229,15 +228,11 @@ class _StudentPageState extends State<StudentPage> {
                     .sort((a, b) => a.createdate!.compareTo(b.createdate!));
               });
             }),
-
-        DataColumn(label: Text("ФИО")),
-
-        DataColumn(label: Text("Паспорт")),
-        DataColumn(label: Text("Дата рождение")),
-        DataColumn(label: Text("Курс")),
-        DataColumn(label: Text("Группа")),
-        DataColumn(label: Text("Регион")),
-        DataColumn(label: Text("Дата ухода")),
+        DataColumn(label: Text("ФИО", style: TextStyle(fontSize: 10))),
+        DataColumn(label: Text("Курс", style: TextStyle(fontSize: 10))),
+        DataColumn(label: Text("Группа", style: TextStyle(fontSize: 10))),
+        DataColumn(label: Text("Регион", style: TextStyle(fontSize: 10))),
+        DataColumn(label: Text("Дата ухода", style: TextStyle(fontSize: 10))),
         DataColumn(label: Text("Изменить", style: TextStyle(fontSize: 10))),
         DataColumn(label: Text("Удалить", style: TextStyle(fontSize: 10))),
       ],
@@ -245,14 +240,16 @@ class _StudentPageState extends State<StudentPage> {
         return DataRow(
           cells: [
             DataCell(Text(e.id.toString())),
-            DataCell(Text(formatter.format(DateTime.parse(e.createdate!)))),
+            DataCell(Text(e.createdate == null
+                ? ""
+                : formatter.format(DateTime.parse(e.createdate!)))),
             DataCell(Text(e.name!)),
-            DataCell(Text(e.passportId!)),
-            DataCell(Text(formatter.format(DateTime.parse(e.birthday!)))),
             DataCell(Text(e.course!.level!)),
             DataCell(Text(e.groupSet!.name!)),
             DataCell(Text(e.region!.name!)),
-            DataCell(Text(e.exitdate == null?"" :formatter.format(DateTime.parse(e.exitdate!)))),
+            DataCell(Text(e.exitdate == null
+                ? ""
+                : formatter.format(DateTime.parse(e.exitdate!)))),
             DataCell(Icon(Icons.edit), onTap: () {
               // _groupEdu = e;
               // showDialogWidget();
@@ -282,72 +279,84 @@ class _StudentPageState extends State<StudentPage> {
               key: _globalKey,
               child: SizedBox(
                 width: 800,
-                height: 600,
+                height: 1000,
                 child: Column(
                   children: [
                     Container(
                         child: Row(
-                      children: [
-                        Expanded(
-                            child: InputDecorator(
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder()),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.transparent),
-                              ),
+                          children: [
+                            Expanded(
+                                child: InputDecorator(
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder()),
+                                  child: DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                      ),
+                                    ),
+                                    validator: (value){
+                                      if (value == null) {
+                                        return "Просим заполнить Группу!";
+                                      }
+                                    },
+                                    items:
+                                    _listCourse.map<DropdownMenuItem<Course>>((
+                                        e) {
+                                      return DropdownMenuItem(
+                                          child: Text(e.level!), value: e);
+                                    }).toList(),
+                                    value: _course,
+                                    isExpanded: true,
+                                    hint: Text("Классы"),
+                                    onChanged: (Course? newValue) {
+                                      setState(() {
+                                        _course = newValue;
+                                        _listGroup = _course!.groupSet!;
+                                        _groupSet = null;
+                                      });
+                                    },
+                                  ),
+                                )),
+                            SizedBox(
+                              width: 20,
                             ),
-                            items:
-                                _listCourse.map<DropdownMenuItem<Course>>((e) {
-                              return DropdownMenuItem(
-                                  child: Text(e.level!), value: e);
-                            }).toList(),
-                            value: _course,
-                            isExpanded: true,
-                            hint: Text("Классы"),
-                            onChanged: (Course? newValue) {
-                              setState(() {
-                                _course = newValue;
-                                _listGroup = _course!.groupSet!;
-                                _groupSet = null;
-                              });
-                            },
-                          ),
+                            Expanded(
+                                child: InputDecorator(
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder()),
+                                  child: DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                      ),
+                                    ),
+                                    items:
+                                    _listGroup.map<DropdownMenuItem<GroupSet>>((
+                                        e) {
+                                      return DropdownMenuItem(
+                                          child: Text(e.name!), value: e);
+                                    }).toList(),
+                                    validator: (value){
+                                      if (value == null) {
+                                        return "Просим заполнить Группу!";
+                                      }
+                                    },
+                                    value: _groupSet,
+                                    isExpanded: true,
+                                    hint: Text("Группы"),
+                                    onChanged: (GroupSet? newValue) {
+                                      setState(() {
+                                        _groupSet = newValue;
+                                        getStudent();
+                                      });
+                                    },
+                                  ),
+                                )),
+                          ],
                         )),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: InputDecorator(
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder()),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.transparent),
-                              ),
-                            ),
-                            items:
-                                _listGroup.map<DropdownMenuItem<GroupSet>>((e) {
-                              return DropdownMenuItem(
-                                  child: Text(e.name!), value: e);
-                            }).toList(),
-                            value: _groupSet,
-                            isExpanded: true,
-                            hint: Text("Группы"),
-                            onChanged: (GroupSet? newValue) {
-                              setState(() {
-                                _groupSet = newValue;
-                                getStudent();
-                              });
-                            },
-                          ),
-                        )),
-                      ],
-                    )),
                     SizedBox(
                       height: 20,
                     ),
@@ -365,7 +374,7 @@ class _StudentPageState extends State<StudentPage> {
                     Container(
                       child: TextFormField(
                         decoration:
-                            InputDecoration(labelText: "Паспортные данные"),
+                        InputDecoration(labelText: "Паспортные данные"),
                         controller: _passportid,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -446,44 +455,51 @@ class _StudentPageState extends State<StudentPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                        child: InputDecorator(
-                      decoration:
-                          const InputDecoration(border: OutlineInputBorder()),
-                      child: DropdownButtonFormField<Region>(
-                        decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
+                    Container(child: Row(children: [
+                      Expanded(
+                          child: DropdownButtonFormField<Region>(
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Просим выбирать Регион!";
+                                }
+                              },
+                              decoration: InputDecoration(
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent),
+                                ),
+                              ),
+                              items: _listRegion.map<DropdownMenuItem<Region>>((
+                                  e) {
+                                return DropdownMenuItem(
+                                    child: Text(e.name!), value: e);
+                              }).toList(),
+                              value: _region,
+                              isExpanded: true,
+                              hint: Text("Регион"),
+                              onChanged: (Region? newValue) {
+                                setState(() {
+                                  _region = newValue;
+                                });
+                              },
+                            ),
                           ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          decoration: InputDecoration(labelText: "Адрес"),
+                          controller: _adress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Просим заполнить Адрес!";
+                            }
+                          },
                         ),
-                        items: _listRegion.map<DropdownMenuItem<Region>>((e) {
-                          return DropdownMenuItem(
-                              child: Text(e.name!), value: e);
-                        }).toList(),
-                        value: _region,
-                        isExpanded: true,
-                        hint: Text("Регион"),
-                        onChanged: (Region? newValue) {
-                          setState(() {
-                            _region = newValue;
-                          });
-                        },
                       ),
-                    )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      child: TextFormField(
-                        decoration: InputDecoration(labelText: "Адрес"),
-                        controller: _adress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Просим заполнить Адрес!";
-                          }
-                        },
-                      ),
-                    ),
+                    ],),)
+
                   ],
                 ),
               ),
