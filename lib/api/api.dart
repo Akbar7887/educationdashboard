@@ -66,4 +66,39 @@ class Api {
       throw Exception("Error");
     }
   }
+
+  Future<dynamic> saveId(
+      String url, Object object, String name_id, String id) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Map<String, dynamic> param = {name_id: id};
+    Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
+
+    final response =
+        await http.post(uri, headers: header, body: jsonEncode(object));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(
+          response.bodyBytes)); //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception('Error - ${response.statusCode}');
+    }
+  }
+
+  Future<dynamic> remove(String url, String id) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Map<String, dynamic> param = {"id": id};
+
+    Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
+    final response =
+    await http.put(uri, headers: header);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(
+          response.bodyBytes)); //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception("Error");
+    }
+  }
 }

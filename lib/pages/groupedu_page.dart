@@ -3,10 +3,11 @@ import 'package:educationdashboard/bloc/course_bloc.dart';
 import 'package:educationdashboard/bloc/edu_state.dart';
 import 'package:educationdashboard/bloc/subject_bloc.dart';
 import 'package:educationdashboard/models/GroupSet.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import '../bloc/edu_event.dart';
 import '../bloc/groupbloc.dart';
 import '../models/Course.dart';
 import '../models/Subject.dart';
@@ -31,7 +32,9 @@ class _GroupEduPageState extends State<GroupEduPage> {
   TextEditingController _name = TextEditingController();
   DateTime? _selectedDate;
   final _globalKeyname = GlobalKey<FormState>();
-  GroupBloc? _groupBloc;
+  GroupBloc? groupBloc;
+  DateFormat dateformat = DateFormat("yyyy-MM-ddThh:mm:ss.000+00:00");
+  CourseBloc? courseBloc;
 
   // CourseBloc? _courseBloc;
   List<Course> _listCourse = [];
@@ -69,8 +72,8 @@ class _GroupEduPageState extends State<GroupEduPage> {
     super.initState();
 
     subjectBloc = BlocProvider.of<SubjectBloc>(context);
-    // _groupBloc = BlocProvider.of<GroupBloc>(context);
-    // _courseBloc = BlocProvider.of<CourseBloc>(context);
+    groupBloc = BlocProvider.of<GroupBloc>(context);
+    courseBloc = BlocProvider.of<CourseBloc>(context);
     getAll();
     // _subject = Subject();
     _groupEdu = GroupSet();
@@ -82,8 +85,8 @@ class _GroupEduPageState extends State<GroupEduPage> {
   void dispose() {
     super.dispose();
     subjectBloc!.close();
-    // _groupBloc!.close();
-    // _courseBloc!.close();
+    groupBloc!.close();
+    //_courseBloc!.close();
   }
 
   @override
@@ -100,12 +103,13 @@ class _GroupEduPageState extends State<GroupEduPage> {
           if (state is CourseEduLoadedState) {
             _listCourse = state.loadedCourse;
 
-            _listCourse.forEach((element) {
-              _list.addAll(element.groupSet!.toList());
-            });
-            // for(GroupSet groupSet in _listCourse){
-            //
-            // }
+            _listCourse.sort((a, b) => a.id!.compareTo(b.id!));
+            if (_course != null) {
+              _course = _listCourse
+                  .firstWhere((element) => element.id == _course!.id);
+              _list = _course!.groupSet!;
+            }
+            _list.sort((a, b) => a.id!.compareTo(b.id!));
 
             return Container(
                 alignment: Alignment.center,
@@ -147,6 +151,8 @@ class _GroupEduPageState extends State<GroupEduPage> {
             child: Row(
           children: [
             Container(
+              width: 200,
+              height: 50,
               // alignment: Alignment.topLeft,
               child: ElevatedButton(
                 onPressed: () {
@@ -156,24 +162,40 @@ class _GroupEduPageState extends State<GroupEduPage> {
                 },
                 child: Text("Добавить"),
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Ui.color)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.indigoAccent)),
               ),
-            ),SizedBox(width: 100,),
-            Expanded(
-              child: DropdownButton(
-                items: _listCourse.map<DropdownMenuItem<Course>>((e) {
-                  return DropdownMenuItem(child: Text(e.level!), value: e);
-                }).toList(),
-                value: _course,
-                isExpanded: true,
-                hint: Text("Классы"),
-                onChanged: (Course? newValue) {
-                  setState(() {
-                    _course = newValue;
-                  });
-                },
-              ),
-            )
+            ),
+            SizedBox(
+              width: 100,
+            ),
+            Container(
+                width: 400,
+                height: 70,
+                child: InputDecorator(
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                    ),
+                    items: _listCourse.map<DropdownMenuItem<Course>>((e) {
+                      return DropdownMenuItem(child: Text(e.level!), value: e);
+                    }).toList(),
+                    value: _course,
+                    isExpanded: true,
+                    hint: Text("Классы"),
+                    onChanged: (Course? newValue) {
+                      setState(() {
+                        _course = newValue;
+                        // _list.clear();
+                        _list = newValue!.groupSet!;
+                      });
+                    },
+                  ),
+                )),
             // Container(child: ,),
           ],
         )),
@@ -183,7 +205,7 @@ class _GroupEduPageState extends State<GroupEduPage> {
         Expanded(
             child: DataTable(
           headingRowColor: MaterialStateProperty.all(Colors.grey),
-          columnSpacing: 100,
+          columnSpacing: 170,
           headingTextStyle: TextStyle(color: Colors.white),
           sortColumnIndex: 0,
           columns: [
@@ -205,7 +227,11 @@ class _GroupEduPageState extends State<GroupEduPage> {
                   _groupEdu = e;
                   showDialogWidget();
                 }),
-                DataCell(Icon(Icons.delete), onTap: () {}),
+                DataCell(Icon(Icons.delete), onTap: () {
+                  groupBloc!.remove(e.id.toString()).then((value) {
+                    courseBloc!.add(EduLoadEvent());
+                  });
+                }),
               ],
             );
           }).toList(),
@@ -242,6 +268,34 @@ class _GroupEduPageState extends State<GroupEduPage> {
               height: 400,
               child: Column(
                 children: [
+                  InputDecorator(
+                    decoration:
+                        const InputDecoration(border: OutlineInputBorder()),
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                      ),
+                      items: _listCourse.map<DropdownMenuItem<Course>>((e) {
+                        return DropdownMenuItem(
+                            child: Text(e.level!), value: e);
+                      }).toList(),
+                      value: _course,
+                      isExpanded: true,
+                      hint: Text("Классы"),
+                      onChanged: (Course? newValue) {
+                        setState(() {
+                          _course = newValue;
+                          // _list.clear();
+                          _list = newValue!.groupSet!;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     child: DateTimeField(
                       decoration: const InputDecoration(
@@ -258,6 +312,44 @@ class _GroupEduPageState extends State<GroupEduPage> {
                       },
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                      child: _listSubject.length == 0
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : InputDecorator(
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder()),
+                              child: DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent),
+                                  ),
+                                ),
+                                items: _listSubject
+                                    .map<DropdownMenuItem<Subject>>((e) {
+                                  return DropdownMenuItem(
+                                    child: Text(e.name!),
+                                    value: e,
+                                  );
+                                }).toList(),
+                                isExpanded: true,
+                                hint: Text("Предмет"),
+                                value: _subject,
+                                onChanged: (Subject? newValue) {
+                                  setState(() {
+                                    _subject = newValue;
+                                  });
+                                },
+                              ),
+                            )),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     child: Form(
                       key: _globalKeyname,
@@ -273,32 +365,6 @@ class _GroupEduPageState extends State<GroupEduPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: _listSubject.length == 0
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : DropdownButton(
-                            items: _listSubject
-                                .map<DropdownMenuItem<Subject>>((e) {
-                              return DropdownMenuItem(
-                                child: Text(e.name!),
-                                value: e,
-                              );
-                            }).toList(),
-                            isExpanded: true,
-                            hint: Text("Предмет"),
-                            value: _subject,
-                            onChanged: (Subject? newValue) {
-                              setState(() {
-                                _subject = newValue;
-                              });
-                            },
-                          ),
-                  )
                 ],
               ),
             ),
@@ -313,11 +379,20 @@ class _GroupEduPageState extends State<GroupEduPage> {
                   if (_groupEdu == null) {
                     _groupEdu = GroupSet();
                   }
-                  _groupEdu!.name = _name.text;
+                  _groupEdu!.name = _name.text.trim();
                   _groupEdu!.subject = _subject;
-                  _groupEdu!.createdate = formatter.format(_selectedDate!);
+                  String date = dateformat.format(_selectedDate!);
+                  //String dateWithT = date.substring(0, 8) + 'T' + date.substring(8);
+                  _groupEdu!.createdate = date;
 
-                  _groupBloc!.save(_groupEdu!).then((value) {
+                  groupBloc!
+                      .save(_groupEdu!, "course_id", _course!.id.toString())
+                      .then((value) {
+                    // setState((){
+                    //_listCourse.clear();
+
+                    courseBloc!.add(EduLoadEvent());
+                    // });
                     Navigator.of(dialogContext).pop(); // Dismiss alert dialog
                   });
                 },

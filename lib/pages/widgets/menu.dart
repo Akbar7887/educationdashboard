@@ -52,7 +52,7 @@ class Menu extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Container(
-                                    child: Text("Группа",
+                                    child: Text("Группы",
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontFamily: Ui.font,
@@ -70,7 +70,7 @@ class Menu extends StatelessWidget {
                               onTap: () {
                                 context
                                     .read<SimpleProvider>()
-                                    .changeindexpage(1);
+                                    .changeindexpage(2);
                               },
                               value: reference.region,
                               child: Column(

@@ -1,6 +1,8 @@
+
 import 'package:educationdashboard/bloc/course_bloc.dart';
 import 'package:educationdashboard/bloc/subject_bloc.dart';
 import 'package:educationdashboard/pages/groupedu_page.dart';
+import 'package:educationdashboard/pages/student_page.dart';
 import 'package:educationdashboard/pages/widgets/menu.dart';
 import 'package:educationdashboard/providers/simple_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../api/repository.dart';
 import '../bloc/groupbloc.dart';
 import '../bloc/edu_event.dart';
+import '../bloc/student_bloc.dart';
 import '../models/ui.dart';
 
 class Home extends StatelessWidget {
@@ -23,8 +26,7 @@ class Home extends StatelessWidget {
             providers: [
               BlocProvider(
                   create: (context) =>
-                      GroupBloc(repository: context.read<Repository>())
-                        ),
+                      GroupBloc(repository: context.read<Repository>())),
               BlocProvider(
                   create: (context) =>
                       SubjectBloc(repository: context.read<Repository>())),
@@ -32,6 +34,9 @@ class Home extends StatelessWidget {
                   create: (context) =>
                       CourseBloc(repository: context.read<Repository>())
                         ..add(EduLoadEvent())),
+              BlocProvider(
+                  create: (context) =>
+                      StudentBloc(repository: context.read<Repository>())),
             ],
             child: Scaffold(
                 appBar: AppBar(
@@ -56,8 +61,8 @@ class Home extends StatelessWidget {
     switch (page) {
       case 1:
         return GroupEduPage();
-      // case 2:
-      //   return ClassesPage();
+      case 2:
+        return StudentPage();
     }
   }
 }

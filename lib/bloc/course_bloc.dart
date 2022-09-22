@@ -25,7 +25,7 @@ class CourseBloc extends Bloc<EduEvent, EduState>{
 
     on<EduClearEvent>((event, emit) => emit(EduEmtyState()));
   }
-  // Future<List<dynamic>> getall() async {
-  //   return await repository.getall("course/get");
-  // }
+  Future<List<dynamic>> get() async {
+    return await repository.getall("course/get");
+  }
 }
