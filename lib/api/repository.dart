@@ -12,5 +12,8 @@ class Repository {
 
   Future<dynamic> remove(String url,String id) => _api.remove(url, id);
 
-  // Future<List<ImageCatalog>> getimagecatalog(String id) => api.getImageCatalog(id);
+
+  Future<dynamic> save(String url, Object object) => _api.save(url, object);
+
+// Future<List<ImageCatalog>> getimagecatalog(String id) => api.getImageCatalog(id);
 }

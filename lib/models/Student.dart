@@ -56,7 +56,7 @@ class Student {
     if (this.exitdate != null) {
       data['exitdate'] = this.exitdate;
     }
-      data['groupEduSet'] = this.groupSet;
+      data['groupEdu'] = this.groupSet;
     if (this.region != null) {
       data['region'] = this.region!.toJson();
     }

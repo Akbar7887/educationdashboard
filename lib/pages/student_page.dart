@@ -1,3 +1,4 @@
+import 'package:date_field/date_field.dart';
 import 'package:educationdashboard/bloc/course_bloc.dart';
 import 'package:educationdashboard/bloc/region_bloc.dart';
 import 'package:educationdashboard/models/Course.dart';
@@ -26,6 +27,7 @@ class _StudentPageState extends State<StudentPage> {
   Region? _region;
   Course? _course;
   GroupSet? _groupSet;
+  Student? student;
   StudentBloc? studentBloc;
   CourseBloc? courseBloc;
   var formatter = DateFormat('dd-MM-yyyy');
@@ -33,6 +35,11 @@ class _StudentPageState extends State<StudentPage> {
   RegionBloc? regionBloc;
   TextEditingController _name = TextEditingController();
   TextEditingController _adress = TextEditingController();
+  TextEditingController _passportid = TextEditingController();
+  DateFormat dateformat = DateFormat("yyyy-MM-ddThh:mm:ss.000+00:00");
+  DateTime? _createDate;
+  DateTime? _exitDate;
+  DateTime? _birthday;
 
   void getStudent() {
     // courseBloc!.get().then((value) {
@@ -51,7 +58,7 @@ class _StudentPageState extends State<StudentPage> {
   void getRegion() {
     regionBloc!.get().then((value) {
       _listRegion = value.map((e) => Region.fromJson(e)).toList();
-      _listRegion.sort((a,b) => a.id!.compareTo(b.id!));
+      _listRegion.sort((a, b) => a.id!.compareTo(b.id!));
     });
   }
 
@@ -63,6 +70,7 @@ class _StudentPageState extends State<StudentPage> {
     regionBloc = BlocProvider.of(context);
     getStudent();
     getRegion();
+    _createDate = DateTime.now();
   }
 
   @override
@@ -229,8 +237,7 @@ class _StudentPageState extends State<StudentPage> {
         DataColumn(label: Text("Курс")),
         DataColumn(label: Text("Группа")),
         DataColumn(label: Text("Регион")),
-        DataColumn(label: Text("Адрес")),
-        // DataColumn(label: Text("Предмет")),
+        DataColumn(label: Text("Дата ухода")),
         DataColumn(label: Text("Изменить", style: TextStyle(fontSize: 10))),
         DataColumn(label: Text("Удалить", style: TextStyle(fontSize: 10))),
       ],
@@ -241,11 +248,11 @@ class _StudentPageState extends State<StudentPage> {
             DataCell(Text(formatter.format(DateTime.parse(e.createdate!)))),
             DataCell(Text(e.name!)),
             DataCell(Text(e.passportId!)),
-            DataCell(Text(e.birthday!)),
+            DataCell(Text(formatter.format(DateTime.parse(e.birthday!)))),
             DataCell(Text(e.course!.level!)),
             DataCell(Text(e.groupSet!.name!)),
             DataCell(Text(e.region!.name!)),
-            DataCell(Text(e.adress!)),
+            DataCell(Text(e.exitdate == null?"" :formatter.format(DateTime.parse(e.exitdate!)))),
             DataCell(Icon(Icons.edit), onTap: () {
               // _groupEdu = e;
               // showDialogWidget();
@@ -270,12 +277,12 @@ class _StudentPageState extends State<StudentPage> {
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-            title: Text('Группа'),
+            title: Text('Студент'),
             content: Form(
               key: _globalKey,
               child: SizedBox(
                 width: 800,
-                height: 400,
+                height: 600,
                 child: Column(
                   children: [
                     Container(
@@ -303,8 +310,8 @@ class _StudentPageState extends State<StudentPage> {
                             onChanged: (Course? newValue) {
                               setState(() {
                                 _course = newValue;
-                                // _list.clear();
-                                // _list = newValue!.groupSet!;
+                                _listGroup = _course!.groupSet!;
+                                _groupSet = null;
                               });
                             },
                           ),
@@ -341,6 +348,9 @@ class _StudentPageState extends State<StudentPage> {
                         )),
                       ],
                     )),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Container(
                       child: TextFormField(
                         decoration: InputDecoration(labelText: "ФИО студента"),
@@ -350,6 +360,87 @@ class _StudentPageState extends State<StudentPage> {
                             return "Просим заполнить ФИО!";
                           }
                         },
+                      ),
+                    ),
+                    Container(
+                      child: TextFormField(
+                        decoration:
+                            InputDecoration(labelText: "Паспортные данные"),
+                        controller: _passportid,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Просим заполнить Паспортные данные!";
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      child: DateTimeField(
+                        decoration: const InputDecoration(
+                          hintStyle: TextStyle(color: Colors.black45),
+                          errorStyle: TextStyle(color: Colors.redAccent),
+                          border: OutlineInputBorder(),
+                          suffixIcon: Icon(Icons.event_note),
+                          labelText: 'День рождения',
+                        ),
+                        mode: DateTimeFieldPickerMode.date,
+                        selectedDate: _birthday,
+                        onDateSelected: (DateTime value) {
+                          setState(() {
+                            _birthday = value;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: DateTimeField(
+                              decoration: const InputDecoration(
+                                hintStyle: TextStyle(color: Colors.black45),
+                                errorStyle: TextStyle(color: Colors.redAccent),
+                                border: OutlineInputBorder(),
+                                suffixIcon: Icon(Icons.event_note),
+                                labelText: 'Дата создание',
+                              ),
+                              mode: DateTimeFieldPickerMode.date,
+                              selectedDate: _createDate,
+                              onDateSelected: (DateTime value) {
+                                setState(() {
+                                  _createDate = value;
+                                });
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: DateTimeField(
+                              decoration: const InputDecoration(
+                                hintStyle: TextStyle(color: Colors.black45),
+                                errorStyle: TextStyle(color: Colors.redAccent),
+                                border: OutlineInputBorder(),
+                                suffixIcon: Icon(Icons.event_note),
+                                labelText: 'Дата окончание',
+                              ),
+                              mode: DateTimeFieldPickerMode.date,
+                              selectedDate: _exitDate,
+                              onDateSelected: (DateTime value) {
+                                setState(() {
+                                  _exitDate = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
@@ -375,7 +466,6 @@ class _StudentPageState extends State<StudentPage> {
                         onChanged: (Region? newValue) {
                           setState(() {
                             _region = newValue;
-
                           });
                         },
                       ),
@@ -405,6 +495,28 @@ class _StudentPageState extends State<StudentPage> {
                   if (_globalKey.currentState!.validate() == false) {
                     return;
                   }
+                  if (student == null) {
+                    student = Student();
+                  }
+                  student!.groupSet = _groupSet;
+                  if (_createDate != null) {
+                    student!.createdate = dateformat.format(_createDate!);
+                  }
+                  if (_birthday != null) {
+                    student!.birthday = dateformat.format(_birthday!);
+                  }
+                  if (_exitDate != null) {
+                    student!.exitdate = dateformat.format(_exitDate!);
+                  }
+                  student!.name = _name.text.trim();
+                  student!.passportId = _passportid.text.trim();
+                  student!.adress = _adress.text.trim();
+                  student!.region = _region;
+                  student!.course = _course;
+
+                  studentBloc!.save(student!).then((value) {
+                    Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                  });
                 },
               ),
               TextButton(
