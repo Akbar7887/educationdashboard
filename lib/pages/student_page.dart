@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../bloc/edu_event.dart';
+
 import '../bloc/student_bloc.dart';
 import '../models/Student.dart';
 import '../models/ui.dart';
@@ -26,6 +26,9 @@ class _StudentPageState extends State<StudentPage> {
   StudentBloc? studentBloc;
   CourseBloc? courseBloc;
   var formatter = DateFormat('dd-MM-yyyy');
+  final _globalKey = GlobalKey<FormState>();
+  TextEditingController _name = TextEditingController();
+  TextEditingController _adress = TextEditingController();
 
   void getAll() {
     // courseBloc!.get().then((value) {
@@ -33,6 +36,11 @@ class _StudentPageState extends State<StudentPage> {
     // });
     studentBloc!.get().then((value) {
       _listStudent = value.map((e) => Student.fromJson(e)).toList();
+      if (_groupSet != null) {
+        _listStudent = _listStudent
+            .where((element) => element.groupSet!.id == _groupSet!.id)
+            .toList();
+      }
     });
   }
 
@@ -91,9 +99,10 @@ class _StudentPageState extends State<StudentPage> {
                           // alignment: Alignment.topLeft,
                           child: ElevatedButton(
                             onPressed: () {
-                              // _groupEdu = null;
+                              _course = null;
+                              _groupSet = null;
                               // _subject = null;
-                              // showDialogWidget();
+                              showDialogWidget();
                             },
                             child: Text("Добавить"),
                             style: ButtonStyle(
@@ -142,39 +151,31 @@ class _StudentPageState extends State<StudentPage> {
                         Container(
                             width: 400,
                             height: 70,
-                            child: StatefulBuilder(
-                              builder: (context, setState) {
-                                return InputDecorator(
-                                  decoration: const InputDecoration(
-                                      border: OutlineInputBorder()),
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.transparent),
-                                      ),
-                                    ),
-                                    items: _listGroup
-                                        .map<DropdownMenuItem<GroupSet>>((e) {
-                                      return DropdownMenuItem(
-                                          child: Text(e.name!), value: e);
-                                    }).toList(),
-                                    value: _groupSet,
-                                    isExpanded: true,
-                                    hint: Text("Группы"),
-                                    onChanged: (GroupSet? newValue) {
-                                      setState(() {
-                                        _groupSet = newValue;
-                                        _listStudent = _listStudent
-                                            .where((element) =>
-                                                element.groupSet!.id ==
-                                                _groupSet!.id)
-                                            .toList();
-                                      });
-                                    },
+                            child: InputDecorator(
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder()),
+                              child: DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent),
                                   ),
-                                );
-                              },
+                                ),
+                                items: _listGroup
+                                    .map<DropdownMenuItem<GroupSet>>((e) {
+                                  return DropdownMenuItem(
+                                      child: Text(e.name!), value: e);
+                                }).toList(),
+                                value: _groupSet,
+                                isExpanded: true,
+                                hint: Text("Группы"),
+                                onChanged: (GroupSet? newValue) {
+                                  setState(() {
+                                    _groupSet = newValue;
+                                    getAll();
+                                  });
+                                },
+                              ),
                             )),
 
                         // Container(child: ,),
@@ -244,6 +245,137 @@ class _StudentPageState extends State<StudentPage> {
           ],
         );
       }).toList(),
+    );
+  }
+
+  Future<void> showDialogWidget() async {
+    //TextEditingController _se = TextEditingController();
+
+    return await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Группа'),
+            content: Form(
+              key: _globalKey,
+              child: SizedBox(
+                width: 800,
+                height: 400,
+                child: Column(
+                  children: [
+                    Container(
+                        child: Row(
+                      children: [
+                        Expanded(
+                            child: InputDecorator(
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder()),
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
+                              ),
+                            ),
+                            items:
+                                _listCourse.map<DropdownMenuItem<Course>>((e) {
+                              return DropdownMenuItem(
+                                  child: Text(e.level!), value: e);
+                            }).toList(),
+                            value: _course,
+                            isExpanded: true,
+                            hint: Text("Классы"),
+                            onChanged: (Course? newValue) {
+                              setState(() {
+                                _course = newValue;
+                                // _list.clear();
+                                // _list = newValue!.groupSet!;
+                              });
+                            },
+                          ),
+                        )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                            child: InputDecorator(
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder()),
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
+                              ),
+                            ),
+                            items:
+                                _listGroup.map<DropdownMenuItem<GroupSet>>((e) {
+                              return DropdownMenuItem(
+                                  child: Text(e.name!), value: e);
+                            }).toList(),
+                            value: _groupSet,
+                            isExpanded: true,
+                            hint: Text("Группы"),
+                            onChanged: (GroupSet? newValue) {
+                              setState(() {
+                                _groupSet = newValue;
+                                getAll();
+                              });
+                            },
+                          ),
+                        )),
+                      ],
+                    )),
+                    Container(
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: "ФИО студента"),
+                        controller: _name,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Просим заполнить ФИО!";
+                          }
+                        },
+                      ),
+                    ),
+
+                    Container(
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: "Адрес"),
+                        controller: _adress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Просим заполнить Адрес!";
+                          }
+                        },
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Сохранить'),
+                onPressed: () {
+
+                  if (_globalKey.currentState!.validate() == false) {
+                    return;
+                  }
+                },
+              ),
+              TextButton(
+                child: Text('Отмена'),
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                },
+              ),
+            ],
+          );
+        });
+      },
     );
   }
 }
