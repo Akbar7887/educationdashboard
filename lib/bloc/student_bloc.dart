@@ -10,6 +10,6 @@ class StudentBloc extends Cubit<EduState>{
   StudentBloc({required this.repository}): super(EduEmtyState());
 
   Future<List<dynamic>> get() async{
-    return await repository.getall("course/get");
+    return await repository.getall("student/get");
   }
 }

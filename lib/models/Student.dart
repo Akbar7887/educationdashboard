@@ -9,13 +9,11 @@ class Student {
   Course? course;
   String? createdate;
   String? exitdate;
-  List<GroupSet>? groupEduSet;
+  GroupSet? groupSet;
   int? id;
-  String? lastname;
   String? name;
   String? passportId;
   Region? region;
-  Subject? subject;
 
   Student(
       {this.adress,
@@ -23,13 +21,11 @@ class Student {
       this.course,
       this.createdate,
       this.exitdate,
-      this.groupEduSet,
+      this.groupSet,
       this.id,
-      this.lastname,
       this.name,
       this.passportId,
-      this.region,
-      this.subject});
+      this.region});
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
@@ -37,19 +33,12 @@ class Student {
       birthday: json['birthday'],
       course: json['course'] != null ? Course.fromJson(json['course']) : null,
       createdate: json['createdate'],
-      exitdate: json['exitdate'],
-      groupEduSet: json['groupEduSet'] != null
-          ? (json['groupEduSet'] as List)
-              .map((i) => GroupSet.fromJson(i))
-              .toList()
-          : null,
+      exitdate: json['exitdate'] !=null?json['exitdate'] : null,
+      groupSet: json['groupEdu'] != null ? GroupSet.fromJson(json['groupEdu']) : null,
       id: json['id'],
-      lastname: json['lastname'],
       name: json['name'],
       passportId: json['passportId'],
       region: json['region'] != null ? Region.fromJson(json['region']) : null,
-      subject:
-          json['subject'] != null ? Subject.fromJson(json['subject']) : null,
     );
   }
 
@@ -59,7 +48,6 @@ class Student {
     data['birthday'] = this.birthday;
     data['createdate'] = this.createdate;
     data['id'] = this.id;
-    data['lastname'] = this.lastname;
     data['name'] = this.name;
     data['passportId'] = this.passportId;
     if (this.course != null) {
@@ -68,14 +56,9 @@ class Student {
     if (this.exitdate != null) {
       data['exitdate'] = this.exitdate;
     }
-    if (this.groupEduSet != null) {
-      data['groupEduSet'] = this.groupEduSet!.map((v) => v.toJson()).toList();
-    }
+      data['groupEduSet'] = this.groupSet;
     if (this.region != null) {
       data['region'] = this.region!.toJson();
-    }
-    if (this.subject != null) {
-      data['subject'] = this.subject!.toJson();
     }
     return data;
   }
