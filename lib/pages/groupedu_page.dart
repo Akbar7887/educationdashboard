@@ -1,4 +1,5 @@
 import 'package:date_field/date_field.dart';
+import 'package:educationdashboard/bloc/course_bloc.dart';
 import 'package:educationdashboard/bloc/edu_state.dart';
 import 'package:educationdashboard/bloc/subject_bloc.dart';
 import 'package:educationdashboard/models/GroupSet.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../bloc/groupbloc.dart';
+import '../models/Course.dart';
 import '../models/Subject.dart';
 import '../models/ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,42 +24,71 @@ class GroupEduPage extends StatefulWidget {
 
 class _GroupEduPageState extends State<GroupEduPage> {
   List<GroupSet> _list = [];
-  late GroupSet? _groupEdu;
+  GroupSet? _groupEdu;
   List<Subject> _listSubject = [];
-  late SubjectBloc subjectBloc;
-  late Subject? _subject;
+  late SubjectBloc? subjectBloc;
+  Subject? _subject;
   TextEditingController _name = TextEditingController();
   DateTime? _selectedDate;
   final _globalKeyname = GlobalKey<FormState>();
   GroupBloc? _groupBloc;
 
+  // CourseBloc? _courseBloc;
+  List<Course> _listCourse = [];
+  Course? _course;
+
   void getAll() {
-    subjectBloc.getall().then((value) {
-      setState(() {
-        if (value != null) {
+    subjectBloc!.getall().then((value) {
+      if (value.isNotEmpty) {
+        setState(() {
           _listSubject = value.map((e) => Subject.fromJson(e)).toList();
-          // if(_listSubject.length != 0){
-          //   subject = _listSubject.first;
-          // }
-        }
-      });
+        });
+
+        // if(_listSubject.length != 0){
+        //   subject = _listSubject.first;
+        // }
+      }
     });
+    // _courseBloc!.getall().then((value) {
+    //   setState(() {
+    //     if (value.isNotEmpty && _listCourse.length == 0) {
+    //       _listCourse.addAll(value.map((e) => Course.fromJson(e)).toList());
+    //       // if (_listCourse.isNotEmpty) {
+    //       //   _course = _listCourse.first;
+    //       // }
+    //     }
+    //
+    //     //_course = _listCourse.first;
+    //   });
+    //
+    // });
   }
 
   @override
   void initState() {
     super.initState();
+
     subjectBloc = BlocProvider.of<SubjectBloc>(context);
-    _groupBloc = BlocProvider.of<GroupBloc>(context);
+    // _groupBloc = BlocProvider.of<GroupBloc>(context);
+    // _courseBloc = BlocProvider.of<CourseBloc>(context);
     getAll();
-    _subject = Subject();
+    // _subject = Subject();
     _groupEdu = GroupSet();
     _selectedDate = DateTime.now();
+    // _course = Course();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    subjectBloc!.close();
+    // _groupBloc!.close();
+    // _courseBloc!.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GroupBloc, EduState>(
+    return BlocConsumer<CourseBloc, EduState>(
         builder: (context, state) {
           if (state is EduEmtyState) {
             return Center(child: Text("No data!"));
@@ -66,8 +97,15 @@ class _GroupEduPageState extends State<GroupEduPage> {
             return Center(child: CircularProgressIndicator());
           }
 
-          if (state is GroupEduLoadedSatet) {
-            _list = state.loadedGroupEdu;
+          if (state is CourseEduLoadedState) {
+            _listCourse = state.loadedCourse;
+
+            _listCourse.forEach((element) {
+              _list.addAll(element.groupSet!.toList());
+            });
+            // for(GroupSet groupSet in _listCourse){
+            //
+            // }
 
             return Container(
                 alignment: Alignment.center,
@@ -76,7 +114,7 @@ class _GroupEduPageState extends State<GroupEduPage> {
                     child: Container(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         width: double.maxFinite,
-                        child: main())));
+                        child: mainpage())));
           }
 
           if (state is EduErrorState) {
@@ -89,7 +127,7 @@ class _GroupEduPageState extends State<GroupEduPage> {
         listener: (context, state) {});
   }
 
-  Widget main() {
+  Widget mainpage() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -106,18 +144,39 @@ class _GroupEduPageState extends State<GroupEduPage> {
             // color: Colors.black,
             ),
         Container(
-          alignment: Alignment.topLeft,
-          child: ElevatedButton(
-            onPressed: () {
-              _groupEdu = null;
-              _subject = null;
-              showDialogWidget();
-            },
-            child: Text("Добавить"),
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Ui.color)),
-          ),
-        ),
+            child: Row(
+          children: [
+            Container(
+              // alignment: Alignment.topLeft,
+              child: ElevatedButton(
+                onPressed: () {
+                  _groupEdu = null;
+                  _subject = null;
+                  showDialogWidget();
+                },
+                child: Text("Добавить"),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Ui.color)),
+              ),
+            ),SizedBox(width: 100,),
+            Expanded(
+              child: DropdownButton(
+                items: _listCourse.map<DropdownMenuItem<Course>>((e) {
+                  return DropdownMenuItem(child: Text(e.level!), value: e);
+                }).toList(),
+                value: _course,
+                isExpanded: true,
+                hint: Text("Классы"),
+                onChanged: (Course? newValue) {
+                  setState(() {
+                    _course = newValue;
+                  });
+                },
+              ),
+            )
+            // Container(child: ,),
+          ],
+        )),
         SizedBox(
           height: 10,
         ),
@@ -164,7 +223,6 @@ class _GroupEduPageState extends State<GroupEduPage> {
     } else {
       _name.text = "";
       _selectedDate = DateTime.now();
-      _groupEdu = GroupSet();
     }
     if (_listSubject.length != 0 && _groupEdu != null) {
       _subject = _listSubject
@@ -252,6 +310,9 @@ class _GroupEduPageState extends State<GroupEduPage> {
                     return;
                   }
 
+                  if (_groupEdu == null) {
+                    _groupEdu = GroupSet();
+                  }
                   _groupEdu!.name = _name.text;
                   _groupEdu!.subject = _subject;
                   _groupEdu!.createdate = formatter.format(_selectedDate!);

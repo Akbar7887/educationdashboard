@@ -1,7 +1,6 @@
 import 'Subject.dart';
 
 class GroupSet {
-    String? active;
     String? createdate;
     int? id;
     String? name;

@@ -1,3 +1,4 @@
+import 'package:educationdashboard/bloc/course_bloc.dart';
 import 'package:educationdashboard/bloc/subject_bloc.dart';
 import 'package:educationdashboard/pages/groupedu_page.dart';
 import 'package:educationdashboard/pages/widgets/menu.dart';
@@ -23,10 +24,14 @@ class Home extends StatelessWidget {
               BlocProvider(
                   create: (context) =>
                       GroupBloc(repository: context.read<Repository>())
-                        ..add(EduLoadEvent())),
+                        ),
               BlocProvider(
                   create: (context) =>
                       SubjectBloc(repository: context.read<Repository>())),
+              BlocProvider(
+                  create: (context) =>
+                      CourseBloc(repository: context.read<Repository>())
+                        ..add(EduLoadEvent())),
             ],
             child: Scaffold(
                 appBar: AppBar(
