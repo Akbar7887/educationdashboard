@@ -31,6 +31,27 @@ class Api {
     }
   }
 
+  Future<List<dynamic>> getByParam(
+      String url, String course_id, String subject_id) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Map<String, dynamic> param = {
+      "course_id": course_id,
+      "subject_id": subject_id
+    };
+
+    Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
+    final response = await http.get(uri, headers: header);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      return json; //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception("Error");
+    }
+  }
+
   Future<bool> login(String user, String passwor) async {
     Map<String, String> data = {'username': user, 'password': passwor};
     Map<String, String> header1 = {
@@ -91,8 +112,7 @@ class Api {
     Map<String, dynamic> param = {"id": id};
 
     Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
-    final response =
-    await http.put(uri, headers: header);
+    final response = await http.put(uri, headers: header);
 
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(

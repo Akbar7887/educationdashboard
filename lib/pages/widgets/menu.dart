@@ -85,6 +85,26 @@ class Menu extends StatelessWidget {
                                   )
                                 ],
                               )),
+                          PopupMenuItem(
+                              textStyle: TextStyle(fontSize: 20),
+                              onTap: () {
+                                context
+                                    .read<SimpleProvider>()
+                                    .changeindexpage(3);
+                              },
+                              value: reference.region,
+                              child: Column(
+                                children: [
+                                  Text("Предметы и темы",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: Ui.font,
+                                          color: Colors.white)),
+                                  Divider(
+                                    color: Colors.white,
+                                  )
+                                ],
+                              )),
                         ])),
             Divider(
               color: Colors.white,

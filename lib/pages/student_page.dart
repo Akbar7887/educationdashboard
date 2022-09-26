@@ -214,6 +214,7 @@ class _StudentPageState extends State<StudentPage> {
       showBottomBorder: true,
       headingTextStyle: TextStyle(color: Colors.white),
       sortColumnIndex: 1,
+      columnSpacing: MediaQuery.of(context).size.width > 800 ? 120 : 0,
       columns: [
         DataColumn(label: Text("id")),
         DataColumn(
@@ -247,10 +248,26 @@ class _StudentPageState extends State<StudentPage> {
                 ? ""
                 : formatter.format(DateTime.parse(e.exitdate!)))),
             DataCell(Icon(Icons.edit), onTap: () {
-              // _groupEdu = e;
-              // showDialogWidget();
+              // _course = e.course;
+              // _groupSet = e.groupSet;
+              student = e;
+              showDialogWidget();
             }),
             DataCell(Icon(Icons.delete), onTap: () {
+              studentBloc!.remove(e.id.toString()).then((value) {
+                setState(() {
+                  studentBloc!.get().then((value) {
+                    _listStudent =
+                        value.map((e) => Student.fromJson(e)).toList();
+                    if (_groupSet != null) {
+                      _listStudent = _listStudent
+                          .where((element) =>
+                      element.groupSet!.id == _groupSet!.id)
+                          .toList();
+                    }
+                  });
+                });
+              });
               // groupBloc!.remove(e.id.toString()).then((value) {
               //   courseBloc!.add(EduLoadEvent());
               // });
@@ -262,6 +279,21 @@ class _StudentPageState extends State<StudentPage> {
   }
 
   Future<void> showDialogWidget() async {
+    if (student != null) {
+      _course = _listCourse
+          .where((element) => element.id == student!.course!.id!)
+          .first;
+      _adress.text = student!.adress!;
+      _region = _listRegion
+          .where((element) => element.id == student!.region!.id)
+          .first;
+      _name.text = student!.name!;
+      _passportid.text = student!.passportId!;
+      _listGroup = _course!.groupSet!;
+      _groupSet = _listGroup
+          .where((element) => element.id == student!.groupSet!.id)
+          .first;
+    }
     //TextEditingController _se = TextEditingController();
 
     return await showDialog(
@@ -530,10 +562,12 @@ class _StudentPageState extends State<StudentPage> {
                   studentBloc!.save(student!).then((value) {
                     setState(() {
                       studentBloc!.get().then((value) {
-                        _listStudent = value.map((e) => Student.fromJson(e)).toList();
+                        _listStudent =
+                            value.map((e) => Student.fromJson(e)).toList();
                         if (_groupSet != null) {
                           _listStudent = _listStudent
-                              .where((element) => element.groupSet!.id == _groupSet!.id)
+                              .where((element) =>
+                                  element.groupSet!.id == _groupSet!.id)
                               .toList();
                         }
                       });

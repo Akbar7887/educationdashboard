@@ -17,4 +17,7 @@ class StudentBloc extends Cubit<EduState>{
   Future<dynamic> save(Student student){
     return repository.save("student/save", student);
   }
+  Future<dynamic> remove(String id){
+    return repository.remove("student/remove", id);
+  }
 }

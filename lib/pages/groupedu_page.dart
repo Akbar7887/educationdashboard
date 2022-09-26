@@ -205,9 +205,13 @@ class _GroupEduPageState extends State<GroupEduPage> {
         Expanded(
             child: DataTable(
           headingRowColor: MaterialStateProperty.all(Colors.grey),
-          columnSpacing: 170,
+          columnSpacing: MediaQuery.of(context).size.width > 800 ? 170 : 0,
           headingTextStyle: TextStyle(color: Colors.white),
           sortColumnIndex: 0,
+          border: TableBorder.all(
+            width: 0.1,
+            // color:AppColors.secondaryColor,
+          ),
           columns: [
             DataColumn(label: Text("id")),
             DataColumn(label: Text("Дата создание")),
