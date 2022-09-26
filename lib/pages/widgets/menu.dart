@@ -33,7 +33,7 @@ class Menu extends StatelessWidget {
                     elevation: 0,
                     color: Ui.color,
                     child: Text(
-                      "Справочники",
+                      "Студенты",
                       style: TextStyle(
                           fontSize: 20,
                           fontFamily: Ui.font,
@@ -85,6 +85,24 @@ class Menu extends StatelessWidget {
                                   )
                                 ],
                               )),
+                        ])),
+            Divider(
+              color: Colors.white,
+            ),
+            ListTile(
+                title: PopupMenuButton<reference>(
+                    offset: const Offset(237, -20),
+                    elevation: 0,
+                    color: Ui.color,
+                    child: Text(
+                      "Оброзование",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: Ui.font,
+                          color: Colors.white),
+                    ),
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<reference>>[
                           PopupMenuItem(
                               textStyle: TextStyle(fontSize: 20),
                               onTap: () {
@@ -106,15 +124,6 @@ class Menu extends StatelessWidget {
                                 ],
                               )),
                         ])),
-            Divider(
-              color: Colors.white,
-            ),
-            ListTile(
-                title: Text(
-              "Справочники",
-              style: TextStyle(
-                  fontSize: 20, fontFamily: Ui.font, color: Colors.white),
-            )),
           ],
         ));
   }
