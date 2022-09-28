@@ -31,6 +31,27 @@ class Api {
     }
   }
 
+
+  Future<List<dynamic>> getByLevelId(
+      String url, String level_id) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Map<String, dynamic> param = {
+      "id": level_id
+    };
+
+    Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
+    final response = await http.get(uri, headers: header);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      return json; //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception("Error");
+    }
+  }
+
   Future<List<dynamic>> getByParam(
       String url, String course_id, String subject_id) async {
     token = await _storage.read(key: "token");

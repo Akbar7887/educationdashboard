@@ -203,43 +203,53 @@ class _GroupEduPageState extends State<GroupEduPage> {
           height: 10,
         ),
         Expanded(
-            child: DataTable(
-          headingRowColor: MaterialStateProperty.all(Colors.grey),
-          columnSpacing: MediaQuery.of(context).size.width > 800 ? 170 : 0,
-          headingTextStyle: TextStyle(color: Colors.white),
-          sortColumnIndex: 0,
-          border: TableBorder.all(
-            width: 0.1,
-            // color:AppColors.secondaryColor,
-          ),
-          columns: [
-            DataColumn(label: Text("id")),
-            DataColumn(label: Text("Дата создание")),
-            DataColumn(label: Text("Название группы")),
-            DataColumn(label: Text("Предмет")),
-            DataColumn(label: Text("Изменить", style: TextStyle(fontSize: 10))),
-            DataColumn(label: Text("Удалить", style: TextStyle(fontSize: 10))),
-          ],
-          rows: _list.map((e) {
-            return DataRow(
-              cells: [
-                DataCell(Text(e.id.toString())),
-                DataCell(Text(formatter.format(DateTime.parse(e.createdate!)))),
-                DataCell(Text(e.name!)),
-                DataCell(Text(e.subject!.name!)),
-                DataCell(Icon(Icons.edit), onTap: () {
-                  _groupEdu = e;
-                  showDialogWidget();
-                }),
-                DataCell(Icon(Icons.delete), onTap: () {
-                  groupBloc!.remove(e.id.toString()).then((value) {
-                    courseBloc!.add(EduLoadEvent());
-                  });
-                }),
-              ],
-            );
-          }).toList(),
-        ))
+            child: _list.length == 0
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : DataTable(
+                    headingRowColor: MaterialStateProperty.all(Colors.grey),
+                    columnSpacing:
+                        MediaQuery.of(context).size.width > 800 ? 170 : 0,
+                    headingTextStyle: TextStyle(color: Colors.white),
+                    sortColumnIndex: 0,
+                    border: TableBorder.all(
+                      width: 0.1,
+                      // color:AppColors.secondaryColor,
+                    ),
+                    columns: [
+                      DataColumn(label: Text("id")),
+                      DataColumn(label: Text("Дата создание")),
+                      DataColumn(label: Text("Название группы")),
+                      DataColumn(label: Text("Предмет")),
+                      DataColumn(
+                          label:
+                              Text("Изменить", style: TextStyle(fontSize: 10))),
+                      DataColumn(
+                          label:
+                              Text("Удалить", style: TextStyle(fontSize: 10))),
+                    ],
+                    rows: _list.map((e) {
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(e.id.toString())),
+                          DataCell(Text(
+                              formatter.format(DateTime.parse(e.createdate!)))),
+                          DataCell(Text(e.name!)),
+                          DataCell(Text(e.subject!.name!)),
+                          DataCell(Icon(Icons.edit), onTap: () {
+                            _groupEdu = e;
+                            showDialogWidget();
+                          }),
+                          DataCell(Icon(Icons.delete), onTap: () {
+                            groupBloc!.remove(e.id.toString()).then((value) {
+                              courseBloc!.add(EduLoadEvent());
+                            });
+                          }),
+                        ],
+                      );
+                    }).toList(),
+                  ))
       ],
     );
   }

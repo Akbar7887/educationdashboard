@@ -17,4 +17,7 @@ class Repository {
   Future<List<dynamic>> getAllByParam(
           String url, String course_id, String subject_id) =>
       _api.getByParam(url, course_id, subject_id);
+
+  Future<List<dynamic>> getByleveId(String url, String id) =>
+      _api.getByLevelId(url, id);
 }

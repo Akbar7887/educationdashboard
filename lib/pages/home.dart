@@ -1,4 +1,5 @@
 
+import 'package:educationdashboard/bloc/TaskBloc.dart';
 import 'package:educationdashboard/bloc/course_bloc.dart';
 import 'package:educationdashboard/bloc/level_bloc.dart';
 import 'package:educationdashboard/bloc/region_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:educationdashboard/bloc/subject_bloc.dart';
 import 'package:educationdashboard/pages/groupedu_page.dart';
 import 'package:educationdashboard/pages/level_page.dart';
 import 'package:educationdashboard/pages/student_page.dart';
+import 'package:educationdashboard/pages/task_page.dart';
 import 'package:educationdashboard/pages/widgets/menu.dart';
 import 'package:educationdashboard/providers/simple_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,6 +48,9 @@ class Home extends StatelessWidget {
               BlocProvider(
                   create: (context) =>
                       LevelBloc(repository: context.read<Repository>())),
+              BlocProvider(
+                  create: (context) =>
+                      TaskBloc(repository: context.read<Repository>())),
             ],
             child: Scaffold(
                 appBar: AppBar(
@@ -74,6 +79,8 @@ class Home extends StatelessWidget {
         return StudentPage();
       case 3:
         return LevelPage();
+      case 4:
+        return TaskPage();
     }
   }
 }

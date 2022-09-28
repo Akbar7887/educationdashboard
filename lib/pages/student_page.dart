@@ -88,7 +88,7 @@ class _StudentPageState extends State<StudentPage> {
             }
 
             return Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(20),
                 child: Column(
                   children: [
                     Container(
@@ -99,7 +99,7 @@ class _StudentPageState extends State<StudentPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     Divider(
                         // color: Colors.black,
@@ -110,7 +110,7 @@ class _StudentPageState extends State<StudentPage> {
                           children: [
                             Expanded(
                               child: SizedBox(
-                                height: 50,
+                                height: 70,
                                 width: 120,
                                 child: ElevatedButton(
                                   onPressed: () {
@@ -128,7 +128,7 @@ class _StudentPageState extends State<StudentPage> {
                               ),
                             ),
                             SizedBox(
-                              width: 10,
+                              width: 20,
                             ),
                             Expanded(
                                 child: InputDecorator(
@@ -197,7 +197,12 @@ class _StudentPageState extends State<StudentPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Expanded(child: dateTable()),
+                    Expanded(
+                        child: _listStudent.length == 0
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : dateTable()),
                   ],
                 ));
           }
@@ -218,7 +223,7 @@ class _StudentPageState extends State<StudentPage> {
       columns: [
         DataColumn(label: Text("id")),
         DataColumn(
-            label: Text("Дата принятие"),
+            label: Text("Дата принятие", style: TextStyle(fontSize: 10)),
             onSort: (columnidx, sortAscending) {
               setState(() {
                 _listStudent
@@ -262,7 +267,7 @@ class _StudentPageState extends State<StudentPage> {
                     if (_groupSet != null) {
                       _listStudent = _listStudent
                           .where((element) =>
-                      element.groupSet!.id == _groupSet!.id)
+                              element.groupSet!.id == _groupSet!.id)
                           .toList();
                     }
                   });

@@ -94,7 +94,7 @@ class _LevelPageState extends State<LevelPage> {
                       child: Row(
                     children: [
                       SizedBox(
-                        height: 50,
+                        height: 70,
                         width: 400,
                         child: ElevatedButton(
                           onPressed: () {
@@ -114,6 +114,7 @@ class _LevelPageState extends State<LevelPage> {
                       ),
                       SizedBox(
                           width: 300,
+                          height: 70,
                           child: InputDecorator(
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder()),
@@ -148,6 +149,7 @@ class _LevelPageState extends State<LevelPage> {
                       ),
                       SizedBox(
                           width: 300,
+                          height: 70,
                           child: InputDecorator(
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder()),
@@ -183,50 +185,63 @@ class _LevelPageState extends State<LevelPage> {
                     height: 20,
                   ),
                   Expanded(
-                      child: DataTable(
-                    headingRowColor: MaterialStateProperty.all(Colors.grey),
-                    columnSpacing:
-                        MediaQuery.of(context).size.width > 800 ? 170 : 0,
-                    headingTextStyle: TextStyle(color: Colors.white),
-                    border: TableBorder.all(
-                      width: 0.1,
-                      // color:AppColors.secondaryColor,
-                    ),
-                    columns: [
-                      DataColumn(label: Text("№")),
-                      DataColumn(label: Text("Тема")),
-                      DataColumn(label: Text("Курс")),
-                      DataColumn(label: Text("Предмет")),
-                      DataColumn(
-                          label:
-                              Text("Изменить", style: TextStyle(fontSize: 10))),
-                      DataColumn(
-                          label:
-                              Text("Удалить", style: TextStyle(fontSize: 10))),
-                    ],
-                    rows: _listLevel.map((e) {
-                      return DataRow(cells: [
-                        DataCell(Text((_listLevel.indexOf(e) + 1).toString())),
-                        DataCell(Text(e.levelname!)),
-                        DataCell(Text(e.course!.level!)),
-                        DataCell(Text(e.subject!.name!)),
-                        DataCell(Icon(Icons.edit), onTap: () {
-                          _level = e;
-                          showDialogWidget();
-                        }),
-                        DataCell(Icon(Icons.delete), onTap: () {
-                          levelBloc.remove(e.level_id.toString()).then((value) {
-                            setState(() {
-                              if (_course != null && _subject != null) {
-                                getLevel(_course!.id.toString(),
-                                    _subject!.id.toString());
-                              }
-                            });
-                          });
-                        }),
-                      ]);
-                    }).toList(),
-                  ))
+                      child: _listLevel.length == 0
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : DataTable(
+                              headingRowColor:
+                                  MaterialStateProperty.all(Colors.grey),
+                              headingTextStyle: TextStyle(color: Colors.white),
+                              border: TableBorder.all(
+                                width: 0.1,
+                                // color:AppColors.secondaryColor,
+                              ),
+                              columns: [
+                                DataColumn(label: Text("№")),
+                                DataColumn(label: Text("Тема")),
+                                DataColumn(label: Text("Курс")),
+                                DataColumn(label: Text("Предмет")),
+                                DataColumn(
+                                    label: Text("Изменить",
+                                        style: TextStyle(fontSize: 10))),
+                                DataColumn(
+                                    label: Text("Удалить",
+                                        style: TextStyle(fontSize: 10))),
+                              ],
+                              rows: _listLevel.map((e) {
+                                return DataRow(cells: [
+                                  DataCell(Text(
+                                      (_listLevel.indexOf(e) + 1).toString())),
+                                  DataCell(SizedBox(
+                                      child: Text(e.levelname!),
+                                  width: MediaQuery.of(context).size.width/4,)),
+                                  DataCell(SizedBox(
+                                width: MediaQuery.of(context).size.width/6,
+                                child:Text(e.course!.level!))),
+                                  DataCell(SizedBox(
+                                width: MediaQuery.of(context).size.width/5,
+                                child:Text(e.subject!.name!))),
+                                  DataCell(Icon(Icons.edit), onTap: () {
+                                    _level = e;
+                                    showDialogWidget();
+                                  }),
+                                  DataCell(Icon(Icons.delete), onTap: () {
+                                    levelBloc
+                                        .remove(e.level_id.toString())
+                                        .then((value) {
+                                      setState(() {
+                                        if (_course != null &&
+                                            _subject != null) {
+                                          getLevel(_course!.id.toString(),
+                                              _subject!.id.toString());
+                                        }
+                                      });
+                                    });
+                                  }),
+                                ]);
+                              }).toList(),
+                            ))
                 ],
               ));
         }
