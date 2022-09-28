@@ -60,9 +60,9 @@ class Menu extends StatelessWidget {
                                     width: 200,
                                     alignment: Alignment.center,
                                   ),
-                                  Divider(
-                                    color: Colors.white,
-                                  )
+                                  // Divider(
+                                  //   color: Colors.white,
+                                  // )
                                 ],
                               )),
                           PopupMenuItem(
@@ -80,9 +80,9 @@ class Menu extends StatelessWidget {
                                           fontSize: 20,
                                           fontFamily: Ui.font,
                                           color: Colors.white)),
-                                  Divider(
-                                    color: Colors.white,
-                                  )
+                                  // Divider(
+                                  //   color: Colors.white,
+                                  // )
                                 ],
                               )),
                         ])),
@@ -118,9 +118,9 @@ class Menu extends StatelessWidget {
                                           fontSize: 20,
                                           fontFamily: Ui.font,
                                           color: Colors.white)),
-                                  Divider(
-                                    color: Colors.white,
-                                  )
+                                  // Divider(
+                                  //   color: Colors.white,
+                                  // )
                                 ],
                               )),
                           PopupMenuItem(
@@ -138,9 +138,9 @@ class Menu extends StatelessWidget {
                                           fontSize: 20,
                                           fontFamily: Ui.font,
                                           color: Colors.white)),
-                                  Divider(
-                                    color: Colors.white,
-                                  )
+                                  // Divider(
+                                  //   color: Colors.white,
+                                  // )
                                 ],
                               )),
                         ])),
