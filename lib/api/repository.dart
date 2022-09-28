@@ -20,4 +20,6 @@ class Repository {
 
   Future<List<dynamic>> getByleveId(String url, String id) =>
       _api.getByLevelId(url, id);
+
+  Future<dynamic> saveShow(String url, String id, bool show) => _api.saveShow(url, id, show);
 }

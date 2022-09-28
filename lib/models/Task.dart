@@ -13,6 +13,8 @@ class Task {
   int? id;
   String? taskname;
 
+  bool? show;
+
   Task(
       { this.ans_A,
       this.ans_A_name,
@@ -25,7 +27,8 @@ class Task {
        this.ans_E,
       this.ans_E_name,
       this.id,
-      this.taskname});
+      this.taskname,
+      this.show});
 
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
@@ -41,6 +44,7 @@ class Task {
       ans_E_name: json['ans_E_name'],
       id: json['id'],
       taskname: json['taskname'],
+      show: json['show'],
     );
   }
 
@@ -58,6 +62,7 @@ class Task {
     data['ans_E_name'] = this.ans_E_name;
     data['id'] = this.id;
     data['taskname'] = this.taskname;
+    data['show'] = this.show;
     return data;
   }
 }

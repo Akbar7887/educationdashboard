@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,14 +30,10 @@ class Api {
     }
   }
 
-
-  Future<List<dynamic>> getByLevelId(
-      String url, String level_id) async {
+  Future<List<dynamic>> getByLevelId(String url, String level_id) async {
     token = await _storage.read(key: "token");
     header["Authorization"] = "Bearer ${token}";
-    Map<String, dynamic> param = {
-      "id": level_id
-    };
+    Map<String, dynamic> param = {"id": level_id};
 
     Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
     final response = await http.get(uri, headers: header);
@@ -140,6 +135,23 @@ class Api {
           response.bodyBytes)); //json.map((e) => Catalog.fromJson(e)).toList();
     } else {
       throw Exception("Error");
+    }
+  }
+
+  Future<dynamic> saveShow(String url, String id, bool show) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Map<String, dynamic> param = {"id": id, "show": show.toString()};
+    Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
+
+    final response =
+        await http.put(uri, headers: header);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(
+          response.bodyBytes)); //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception('Error - ${response.statusCode}');
     }
   }
 }

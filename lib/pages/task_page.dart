@@ -282,6 +282,7 @@ class _TaskPageState extends State<TaskPage> {
                                     DataColumn(label: Text("№")),
                                     DataColumn(label: Text("Задание")),
                                     DataColumn(label: Text("Ответы")),
+                                    DataColumn(label: Text("Показать")),
                                     DataColumn(label: Text("Изменить")),
                                     DataColumn(label: Text("Удалить")),
                                   ],
@@ -451,6 +452,21 @@ class _TaskPageState extends State<TaskPage> {
                                               ],
                                             )),
                                           ]))),
+                                      DataCell(Checkbox(
+                                        value: e.show,
+                                        onChanged: (bool? value) {
+                                          taskBloc
+                                              .saveShow("task/save/show",
+                                                  e.id.toString(), value!)
+                                              .then((boolvalue) {
+                                            setState(() {
+
+                                             e.show = value;
+                                              //getTasks();
+                                            });
+                                          });
+                                        },
+                                      )),
                                       DataCell(Icon(Icons.edit), onTap: () {
                                         _task = e;
                                         showDialogWidget();
