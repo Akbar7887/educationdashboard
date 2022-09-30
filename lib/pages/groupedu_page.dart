@@ -209,8 +209,6 @@ class _GroupEduPageState extends State<GroupEduPage> {
                   )
                 : DataTable(
                     headingRowColor: MaterialStateProperty.all(Colors.grey),
-                    columnSpacing:
-                        MediaQuery.of(context).size.width > 800 ? 170 : 0,
                     headingTextStyle: TextStyle(color: Colors.white),
                     sortColumnIndex: 0,
                     border: TableBorder.all(

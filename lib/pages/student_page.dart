@@ -21,12 +21,14 @@ class StudentPage extends StatefulWidget {
 
 class _StudentPageState extends State<StudentPage> {
   List<Student> _listStudent = [];
-  List<Course> _listCourse = [];
-  List<GroupSet> _listGroup = [];
+
+  // List<Course> _listCourse = [];
+  // List<GroupSet> _listGroup = [];
   List<Region> _listRegion = [];
   Region? _region;
-  Course? _course;
-  GroupSet? _groupSet;
+
+  // Course? _course;
+  // GroupSet? _groupSet;
   Student? student;
   StudentBloc? studentBloc;
   CourseBloc? courseBloc;
@@ -41,14 +43,16 @@ class _StudentPageState extends State<StudentPage> {
   DateTime? _exitDate;
   DateTime? _birthday;
 
-  void getStudent() {
-    studentBloc!.get().then((value) {
-      _listStudent = value.map((e) => Student.fromJson(e)).toList();
-      if (_groupSet != null) {
-        _listStudent = _listStudent
-            .where((element) => element.groupSet!.id == _groupSet!.id)
-            .toList();
-      }
+  Future<void> getStudent() async {
+    await studentBloc!.get().then((value) {
+      setState(() {
+        _listStudent = value.map((e) => Student.fromJson(e)).toList();
+      });
+      // if (_groupSet != null) {
+      //   // _listStudent = _listStudent
+      //   //     .where((element) => element.groupSet!.id == _groupSet!.id)
+      //   //     .toList();
+      // }
     });
   }
 
@@ -65,7 +69,7 @@ class _StudentPageState extends State<StudentPage> {
     studentBloc = BlocProvider.of<StudentBloc>(context);
     courseBloc = BlocProvider.of<CourseBloc>(context);
     regionBloc = BlocProvider.of(context);
-    getStudent();
+    // getStudent();
     getRegion();
     _createDate = DateTime.now();
   }
@@ -73,23 +77,24 @@ class _StudentPageState extends State<StudentPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: courseBloc!.get(),
+        future: studentBloc!.get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            if (_listCourse.isEmpty) {
-              _listCourse =
-                  snapshot.data!.map((e) => Course.fromJson(e)).toList();
-              _listCourse.sort((a, b) => a.id!.compareTo(b.id!));
-              _listGroup = _listCourse.first.groupSet!;
-            }
+            // if (_listStudent.isEmpty) {
+            _listStudent =
+                snapshot.data!.map((e) => Student.fromJson(e)).toList();
+
+            // }
 
             return Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       alignment: Alignment.topLeft,
@@ -104,96 +109,22 @@ class _StudentPageState extends State<StudentPage> {
                     Divider(
                         // color: Colors.black,
                         ),
-                    Container(
-                        height: 70,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 70,
-                                width: 120,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    _course = null;
-                                    _groupSet = null;
-                                    // _subject = null;
-                                    showDialogWidget();
-                                  },
-                                  child: Text("Добавить"),
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Colors.indigoAccent)),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Expanded(
-                                child: InputDecorator(
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder()),
-                              child: DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                ),
-                                items: _listCourse
-                                    .map<DropdownMenuItem<Course>>((e) {
-                                  return DropdownMenuItem(
-                                      child: Text(e.level!), value: e);
-                                }).toList(),
-                                value: _course,
-                                isExpanded: true,
-                                hint: Text("Классы"),
-                                onChanged: (Course? newValue) {
-                                  setState(() {
-                                    _course = newValue;
-                                    _listGroup = newValue!.groupSet!;
-                                    _groupSet = null;
-                                    // _list.clear();
-                                    // _list = newValue!.groupSet!;
-                                  });
-                                },
-                              ),
-                            )),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Expanded(
-                                child: InputDecorator(
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder()),
-                              child: DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent),
-                                  ),
-                                ),
-                                items: _listGroup
-                                    .map<DropdownMenuItem<GroupSet>>((e) {
-                                  return DropdownMenuItem(
-                                      child: Text(e.name!), value: e);
-                                }).toList(),
-                                value: _groupSet,
-                                isExpanded: true,
-                                hint: Text("Группы"),
-                                onChanged: (GroupSet? newValue) {
-                                  setState(() {
-                                    _groupSet = newValue;
-                                    getStudent();
-                                  });
-                                },
-                              ),
-                            )),
-
-                            // Container(child: ,),
-                          ],
-                        )),
+                    SizedBox(
+                      height: 30,
+                      width: 120,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          showDialogWidget();
+                        },
+                        child: Text("Добавить"),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.indigoAccent)),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
                     SizedBox(
                       height: 20,
                     ),
@@ -219,7 +150,7 @@ class _StudentPageState extends State<StudentPage> {
       showBottomBorder: true,
       headingTextStyle: TextStyle(color: Colors.white),
       sortColumnIndex: 1,
-      columnSpacing: MediaQuery.of(context).size.width > 800 ? 120 : 0,
+      // columnSpacing: MediaQuery.of(context).size.width > 800 ? 120 : 0,
       columns: [
         DataColumn(label: Text("id")),
         DataColumn(
@@ -231,8 +162,8 @@ class _StudentPageState extends State<StudentPage> {
               });
             }),
         DataColumn(label: Text("ФИО", style: TextStyle(fontSize: 10))),
-        DataColumn(label: Text("Курс", style: TextStyle(fontSize: 10))),
-        DataColumn(label: Text("Группа", style: TextStyle(fontSize: 10))),
+        // DataColumn(label: Text("Курс", style: TextStyle(fontSize: 10))),
+        // DataColumn(label: Text("Группа", style: TextStyle(fontSize: 10))),
         DataColumn(label: Text("Регион", style: TextStyle(fontSize: 10))),
         DataColumn(label: Text("Дата ухода", style: TextStyle(fontSize: 10))),
         DataColumn(label: Text("Изменить", style: TextStyle(fontSize: 10))),
@@ -246,8 +177,8 @@ class _StudentPageState extends State<StudentPage> {
                 ? ""
                 : formatter.format(DateTime.parse(e.createdate!)))),
             DataCell(Text(e.name!)),
-            DataCell(Text(e.course!.level!)),
-            DataCell(Text(e.groupSet!.name!)),
+            // DataCell(Text(e.course!.level!)),
+            // DataCell(Text(e.groupSet!.name!)),
             DataCell(Text(e.region!.name!)),
             DataCell(Text(e.exitdate == null
                 ? ""
@@ -262,14 +193,13 @@ class _StudentPageState extends State<StudentPage> {
               studentBloc!.remove(e.id.toString()).then((value) {
                 setState(() {
                   studentBloc!.get().then((value) {
-                    _listStudent =
-                        value.map((e) => Student.fromJson(e)).toList();
-                    if (_groupSet != null) {
-                      _listStudent = _listStudent
-                          .where((element) =>
-                              element.groupSet!.id == _groupSet!.id)
-                          .toList();
-                    }
+                    getStudent();
+                    // if (_groupSet != null) {
+                    //   _listStudent = _listStudent
+                    //       .where((element) =>
+                    //           element.groupSet!.id == _groupSet!.id)
+                    //       .toList();
+                    // }
                   });
                 });
               });
@@ -285,19 +215,15 @@ class _StudentPageState extends State<StudentPage> {
 
   Future<void> showDialogWidget() async {
     if (student != null) {
-      _course = _listCourse
-          .where((element) => element.id == student!.course!.id!)
-          .first;
       _adress.text = student!.adress!;
       _region = _listRegion
           .where((element) => element.id == student!.region!.id)
           .first;
       _name.text = student!.name!;
       _passportid.text = student!.passportId!;
-      _listGroup = _course!.groupSet!;
-      _groupSet = _listGroup
-          .where((element) => element.id == student!.groupSet!.id)
-          .first;
+      // _groupSet = _listGroup
+      //     .where((element) => element.id == student!.groupSet!.id)
+      //     .first;
     }
     //TextEditingController _se = TextEditingController();
 
@@ -315,79 +241,6 @@ class _StudentPageState extends State<StudentPage> {
                 height: 1000,
                 child: Column(
                   children: [
-                    Container(
-                        child: Row(
-                      children: [
-                        Expanded(
-                            child: InputDecorator(
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder()),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.transparent),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null) {
-                                return "Просим заполнить Группу!";
-                              }
-                            },
-                            items:
-                                _listCourse.map<DropdownMenuItem<Course>>((e) {
-                              return DropdownMenuItem(
-                                  child: Text(e.level!), value: e);
-                            }).toList(),
-                            value: _course,
-                            isExpanded: true,
-                            hint: Text("Классы"),
-                            onChanged: (Course? newValue) {
-                              setState(() {
-                                _course = newValue;
-                                _listGroup = _course!.groupSet!;
-                                _groupSet = null;
-                              });
-                            },
-                          ),
-                        )),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: InputDecorator(
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder()),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.transparent),
-                              ),
-                            ),
-                            items:
-                                _listGroup.map<DropdownMenuItem<GroupSet>>((e) {
-                              return DropdownMenuItem(
-                                  child: Text(e.name!), value: e);
-                            }).toList(),
-                            validator: (value) {
-                              if (value == null) {
-                                return "Просим заполнить Группу!";
-                              }
-                            },
-                            value: _groupSet,
-                            isExpanded: true,
-                            hint: Text("Группы"),
-                            onChanged: (GroupSet? newValue) {
-                              setState(() {
-                                _groupSet = newValue;
-                                getStudent();
-                              });
-                            },
-                          ),
-                        )),
-                      ],
-                    )),
                     SizedBox(
                       height: 20,
                     ),
@@ -548,7 +401,7 @@ class _StudentPageState extends State<StudentPage> {
                   if (student == null) {
                     student = Student();
                   }
-                  student!.groupSet = _groupSet;
+                  // student!.groupSet = _groupSet;
                   if (_createDate != null) {
                     student!.createdate = dateformat.format(_createDate!);
                   }
@@ -562,20 +415,10 @@ class _StudentPageState extends State<StudentPage> {
                   student!.passportId = _passportid.text.trim();
                   student!.adress = _adress.text.trim();
                   student!.region = _region;
-                  student!.course = _course;
 
                   studentBloc!.save(student!).then((value) {
                     setState(() {
-                      studentBloc!.get().then((value) {
-                        _listStudent =
-                            value.map((e) => Student.fromJson(e)).toList();
-                        if (_groupSet != null) {
-                          _listStudent = _listStudent
-                              .where((element) =>
-                                  element.groupSet!.id == _groupSet!.id)
-                              .toList();
-                        }
-                      });
+                      getStudent();
                     });
                     Navigator.of(dialogContext).pop(); // Dismiss alert dialog
                   });

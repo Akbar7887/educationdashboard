@@ -93,10 +93,10 @@ class _LevelPageState extends State<LevelPage> {
                   Container(
                       child: Row(
                     children: [
-                      SizedBox(
-                        height: 70,
-                        width: 400,
-                        child: ElevatedButton(
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
                           onPressed: () {
                             _course = null;
                             _subject = null;
@@ -107,78 +107,73 @@ class _LevelPageState extends State<LevelPage> {
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                   Colors.indigoAccent)),
-                        ),
+                        ),)
                       ),
                       SizedBox(
                         width: 20,
                       ),
-                      SizedBox(
-                          width: 300,
-                          height: 70,
+                      Expanded(
+                        flex: 2,
                           child: InputDecorator(
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder()),
-                            child: DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                              ),
-                              items: _listCourse
-                                  .map<DropdownMenuItem<Course>>((e) {
-                                return DropdownMenuItem(
-                                    child: Text(e.level!), value: e);
-                              }).toList(),
-                              value: _course,
-                              isExpanded: true,
-                              hint: Text("Классы"),
-                              onChanged: (Course? newValue) {
-                                setState(() {
-                                  _course = newValue;
-                                  if (_course != null && _subject != null) {
-                                    getLevel(_course!.id.toString(),
-                                        _subject!.id.toString());
-                                  }
-                                });
-                              },
+                        decoration:
+                            const InputDecoration(border: OutlineInputBorder()),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
                             ),
-                          )),
+                          ),
+                          items: _listCourse.map<DropdownMenuItem<Course>>((e) {
+                            return DropdownMenuItem(
+                                child: Text(e.level!), value: e);
+                          }).toList(),
+                          value: _course,
+                          isExpanded: true,
+                          hint: Text("Классы"),
+                          onChanged: (Course? newValue) {
+                            setState(() {
+                              _course = newValue;
+                              if (_course != null && _subject != null) {
+                                getLevel(_course!.id.toString(),
+                                    _subject!.id.toString());
+                              }
+                            });
+                          },
+                        ),
+                      )),
                       SizedBox(
                         width: 30,
                       ),
-                      SizedBox(
-                          width: 300,
-                          height: 70,
+                      Expanded(
+                        flex: 2,
                           child: InputDecorator(
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder()),
-                            child: DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                              ),
-                              items: _listSubject
-                                  .map<DropdownMenuItem<Subject>>((e) {
-                                return DropdownMenuItem(
-                                    child: Text(e.name!), value: e);
-                              }).toList(),
-                              value: _subject,
-                              isExpanded: true,
-                              hint: Text("Предметы"),
-                              onChanged: (Subject? newValue) {
-                                setState(() {
-                                  _subject = newValue;
-                                  if (_course != null && _subject != null) {
-                                    getLevel(_course!.id.toString(),
-                                        _subject!.id.toString());
-                                  }
-                                });
-                              },
+                        decoration:
+                            const InputDecoration(border: OutlineInputBorder()),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
                             ),
-                          )),
+                          ),
+                          items:
+                              _listSubject.map<DropdownMenuItem<Subject>>((e) {
+                            return DropdownMenuItem(
+                                child: Text(e.name!), value: e);
+                          }).toList(),
+                          value: _subject,
+                          isExpanded: true,
+                          hint: Text("Предметы"),
+                          onChanged: (Subject? newValue) {
+                            setState(() {
+                              _subject = newValue;
+                              if (_course != null && _subject != null) {
+                                getLevel(_course!.id.toString(),
+                                    _subject!.id.toString());
+                              }
+                            });
+                          },
+                        ),
+                      )),
                     ],
                   )),
                   SizedBox(
@@ -214,14 +209,18 @@ class _LevelPageState extends State<LevelPage> {
                                   DataCell(Text(
                                       (_listLevel.indexOf(e) + 1).toString())),
                                   DataCell(SizedBox(
-                                      child: Text(e.levelname!),
-                                  width: MediaQuery.of(context).size.width/4,)),
+                                    child: Text(e.levelname!),
+                                    width:
+                                        MediaQuery.of(context).size.width / 4,
+                                  )),
                                   DataCell(SizedBox(
-                                width: MediaQuery.of(context).size.width/6,
-                                child:Text(e.course!.level!))),
+                                      width:
+                                          MediaQuery.of(context).size.width / 6,
+                                      child: Text(e.course!.level!))),
                                   DataCell(SizedBox(
-                                width: MediaQuery.of(context).size.width/5,
-                                child:Text(e.subject!.name!))),
+                                      width:
+                                          MediaQuery.of(context).size.width / 5,
+                                      child: Text(e.subject!.name!))),
                                   DataCell(Icon(Icons.edit), onTap: () {
                                     _level = e;
                                     showDialogWidget();

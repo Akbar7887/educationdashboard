@@ -1,15 +1,14 @@
 import 'Course.dart';
 import 'GroupSet.dart';
 import 'Region.dart';
-import 'Subject.dart';
 
 class Student {
   String? adress;
   String? birthday;
-  Course? course;
+  // Course? course;
   String? createdate;
   String? exitdate;
-  GroupSet? groupSet;
+  List<GroupSet>? groupEduSet;
   int? id;
   String? name;
   String? passportId;
@@ -18,10 +17,10 @@ class Student {
   Student(
       {this.adress,
       this.birthday,
-      this.course,
+      // this.course,
       this.createdate,
       this.exitdate,
-      this.groupSet,
+      this.groupEduSet,
       this.id,
       this.name,
       this.passportId,
@@ -31,11 +30,12 @@ class Student {
     return Student(
       adress: json['adress'],
       birthday: json['birthday'],
-      course: json['course'] != null ? Course.fromJson(json['course']) : null,
+      // course: json['course'] != null ? Course.fromJson(json['course']) : null,
       createdate: json['createdate'],
       exitdate: json['exitdate'],
-      groupSet:
-          json['groupEdu'] != null ? GroupSet.fromJson(json['groupEdu']) : null,
+      groupEduSet: json['groupEduSet'] != null
+          ? (json['groupEduSet'] as List).map((i) => GroupSet.fromJson(i)).toList()
+          : null,
       id: json['id'],
       name: json['name'],
       passportId: json['passportId'],
@@ -51,11 +51,13 @@ class Student {
     data['id'] = this.id;
     data['name'] = this.name;
     data['passportId'] = this.passportId;
-    if (this.course != null) {
-      data['course'] = this.course!.toJson();
-    }
+    // if (this.course != null) {
+    //   data['course'] = this.course!.toJson();
+    // }
     data['exitdate'] = this.exitdate;
-    data['groupEdu'] = this.groupSet;
+    if (this.groupEduSet != null) {
+      data['groupEduSet'] = this.groupEduSet!.map((v) => v.toJson()).toList();
+    }
     if (this.region != null) {
       data['region'] = this.region!.toJson();
     }
