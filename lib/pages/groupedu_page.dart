@@ -396,9 +396,9 @@ class _GroupEduPageState extends State<GroupEduPage> {
                   String date = dateformat.format(_selectedDate!);
                   //String dateWithT = date.substring(0, 8) + 'T' + date.substring(8);
                   _groupEdu!.createdate = date;
-
+                  // _groupEdu!.students = null;
                   groupBloc!
-                      .save(_groupEdu!, "course_id", _course!.id.toString())
+                      .saveId(_groupEdu!, "course_id", _course!.id.toString())
                       .then((value) {
                     // setState((){
                     //_listCourse.clear();

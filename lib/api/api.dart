@@ -29,6 +29,22 @@ class Api {
       throw Exception("Error");
     }
   }
+  Future<List<dynamic>> getById(String url, String id) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Map<String, dynamic> param = {"id": id};
+
+    Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
+    final response = await http.get(uri, headers: header);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      return json; //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception("Error");
+    }
+  }
 
   Future<List<dynamic>> getByLevelId(String url, String level_id) async {
     token = await _storage.read(key: "token");
@@ -122,6 +138,27 @@ class Api {
     }
   }
 
+  Future<dynamic> addOrRemoveStudentToGroup(
+      String url, String group_id, String student_id) async {
+    token = await _storage.read(key: "token");
+    header["Authorization"] = "Bearer ${token}";
+    Map<String, dynamic> param = {
+      "group_id": group_id,
+      "student_id": student_id
+    };
+    Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
+
+    final response =
+        await http.put(uri, headers: header);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(
+          response.bodyBytes)); //json.map((e) => Catalog.fromJson(e)).toList();
+    } else {
+      throw Exception('Error - ${response.statusCode}');
+    }
+  }
+
   Future<dynamic> remove(String url, String id) async {
     token = await _storage.read(key: "token");
     header["Authorization"] = "Bearer ${token}";
@@ -144,8 +181,7 @@ class Api {
     Map<String, dynamic> param = {"id": id, "show": show.toString()};
     Uri uri = Uri.parse("${Ui.url}${url}").replace(queryParameters: param);
 
-    final response =
-        await http.put(uri, headers: header);
+    final response = await http.put(uri, headers: header);
 
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(

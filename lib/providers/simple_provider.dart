@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class SimpleProvider with ChangeNotifier {
-  int indexpage = 4;
+  int indexpage = 5;
 
 
   int get getindexpage => indexpage;

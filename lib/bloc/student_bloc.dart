@@ -14,10 +14,15 @@ class StudentBloc extends Cubit<EduState>{
     return await repository.getall("student/get");
   }
 
+  Future<List<dynamic>> getbyid(String id) async{
+    return await repository.getById("student/getbygroup", id);
+  }
+
   Future<dynamic> save(Student student){
     return repository.save("student/save", student);
   }
   Future<dynamic> remove(String id){
     return repository.remove("student/remove", id);
   }
+
 }

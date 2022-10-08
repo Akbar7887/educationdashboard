@@ -24,11 +24,19 @@ class GroupBloc extends Bloc<EduEvent, EduState> {
     on<EduClearEvent>((event, emit) => emit(EduEmtyState()));
   }
 
-  Future<dynamic> save(GroupSet groupEdu, nameid, String id) {
+  Future<dynamic> saveId(GroupSet groupEdu, nameid, String id) {
     return repository.saveId("groupedu/saveid", groupEdu, nameid, id);
   }
 
   Future<dynamic> remove(String id) {
     return repository.remove("groupedu/remove", id);
+  }
+
+  Future<dynamic> addOrRemoveStudent(String url, String group_id, String student_id) async {
+   return await repository.addStudent(url, group_id, student_id);
+  }
+  
+  Future<dynamic> getall(){
+    return repository.getall("groupedu/get");
   }
 }

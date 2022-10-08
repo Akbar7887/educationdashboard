@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/ui.dart';
 
-enum reference { region, classes, subject, group }
+enum reference { region, classes, subject, group, journal }
 
 class Menu extends StatelessWidget {
   const Menu({Key? key}) : super(key: key);
@@ -49,46 +49,51 @@ class Menu extends StatelessWidget {
                                     .changeindexpage(1);
                               },
                               value: reference.region,
-                              child: Column(
-                                children: [
-                                  Container(
-                                    child: Text("Группы",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: Ui.font,
-                                            color: Colors.white)),
-                                    width: 200,
-                                    alignment: Alignment.center,
-                                  ),
-                                  // Divider(
-                                  //   color: Colors.white,
-                                  // )
-                                ],
+                              child: Container(
+                                child: Text("Группы",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: Ui.font,
+                                        color: Colors.white)),
+                                alignment: Alignment.center,
                               )),
                           PopupMenuItem(
-                              textStyle: TextStyle(fontSize: 20),
-                              onTap: () {
-                                context
-                                    .read<SimpleProvider>()
-                                    .changeindexpage(2);
-                              },
-                              value: reference.region,
-                              child: Column(
-                                children: [
-                                  Text("Студенты",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: Ui.font,
-                                          color: Colors.white)),
-                                  // Divider(
-                                  //   color: Colors.white,
-                                  // )
-                                ],
-                              )),
+                            textStyle: TextStyle(fontSize: 20),
+                            onTap: () {
+                              context.read<SimpleProvider>().changeindexpage(2);
+                            },
+                            value: reference.region,
+                            child: Container(
+                                alignment: Alignment.center,
+                                child: Text("Студенты",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: Ui.font,
+                                        color: Colors.white))),
+                            // Divider(
+                            //   color: Colors.white,
+                            // )
+                          ),
                         ])),
             Divider(
-              color: Colors.white,
+                // color: Colors.white,
+                ),
+            TextButton(
+              // style: ButtonStyle(fixedSize: 20),
+              onPressed: () {
+                context.read<SimpleProvider>().changeindexpage(5);
+              },
+              // value: reference.journal,
+              child: Text("Журнал",
+                  style: TextStyle(
+                      fontSize: 20, fontFamily: Ui.font, color: Colors.white)),
+              // Divider(
+              //   color: Colors.white,
+              // )
             ),
+            Divider(
+                // color: Colors.white,
+                ),
             ListTile(
                 title: PopupMenuButton<reference>(
                     offset: const Offset(237, -20),

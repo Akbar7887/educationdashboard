@@ -21,5 +21,14 @@ class Repository {
   Future<List<dynamic>> getByleveId(String url, String id) =>
       _api.getByLevelId(url, id);
 
-  Future<dynamic> saveShow(String url, String id, bool show) => _api.saveShow(url, id, show);
+  Future<List<dynamic>> getById(String url, String id) =>
+      _api.getById(url, id);
+
+  Future<dynamic> saveShow(String url, String id, bool show) =>
+      _api.saveShow(url, id, show);
+
+  Future<dynamic> addStudent(
+      String url, String group_id, String student_id)  {
+    return  _api.addOrRemoveStudentToGroup(url, group_id, student_id);
+  }
 }

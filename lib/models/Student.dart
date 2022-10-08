@@ -5,10 +5,12 @@ import 'Region.dart';
 class Student {
   String? adress;
   String? birthday;
+
   // Course? course;
   String? createdate;
   String? exitdate;
-  List<GroupSet>? groupEduSet;
+
+  // List<GroupSet>? groupEduSet;
   int? id;
   String? name;
   String? passportId;
@@ -20,7 +22,7 @@ class Student {
       // this.course,
       this.createdate,
       this.exitdate,
-      this.groupEduSet,
+      // this.groupEduSet,
       this.id,
       this.name,
       this.passportId,
@@ -33,9 +35,9 @@ class Student {
       // course: json['course'] != null ? Course.fromJson(json['course']) : null,
       createdate: json['createdate'],
       exitdate: json['exitdate'],
-      groupEduSet: json['groupEduSet'] != null
-          ? (json['groupEduSet'] as List).map((i) => GroupSet.fromJson(i)).toList()
-          : null,
+      // groupEduSet: json['groupEduSet'] != null
+      //     ? (json['groupEduSet'] as List).map((i) => GroupSet.fromJson(i)).toList()
+      //     : null,
       id: json['id'],
       name: json['name'],
       passportId: json['passportId'],
@@ -55,9 +57,9 @@ class Student {
     //   data['course'] = this.course!.toJson();
     // }
     data['exitdate'] = this.exitdate;
-    if (this.groupEduSet != null) {
-      data['groupEduSet'] = this.groupEduSet!.map((v) => v.toJson()).toList();
-    }
+    // if (this.groupEduSet != null) {
+    //   data['groupEduSet'] = this.groupEduSet!.map((v) => v.toJson()).toList();
+    // }
     if (this.region != null) {
       data['region'] = this.region!.toJson();
     }

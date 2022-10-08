@@ -1,10 +1,10 @@
-
 import 'package:educationdashboard/bloc/TaskBloc.dart';
 import 'package:educationdashboard/bloc/course_bloc.dart';
 import 'package:educationdashboard/bloc/level_bloc.dart';
 import 'package:educationdashboard/bloc/region_bloc.dart';
 import 'package:educationdashboard/bloc/subject_bloc.dart';
 import 'package:educationdashboard/pages/groupedu_page.dart';
+import 'package:educationdashboard/pages/journal_page.dart';
 import 'package:educationdashboard/pages/level_page.dart';
 import 'package:educationdashboard/pages/student_page.dart';
 import 'package:educationdashboard/pages/task_page.dart';
@@ -31,7 +31,8 @@ class Home extends StatelessWidget {
             providers: [
               BlocProvider(
                   create: (context) =>
-                      GroupBloc(repository: context.read<Repository>())),
+                      GroupBloc(repository: context.read<Repository>())
+                        ..add(EduLoadEvent())),
               BlocProvider(
                   create: (context) =>
                       SubjectBloc(repository: context.read<Repository>())),
@@ -81,6 +82,8 @@ class Home extends StatelessWidget {
         return LevelPage();
       case 4:
         return TaskPage();
+      case 5:
+        return JournalPage();
     }
   }
 }
